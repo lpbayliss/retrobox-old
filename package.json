@@ -29,6 +29,8 @@
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/pro-duotone-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
+    "@prisma/client": "^3.14.0",
+    "await-to-js": "^3.0.0",
     "framer-motion": "^6.3.8",
     "next": "^12.1.6",
     "react": "18.1.0",

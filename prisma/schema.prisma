@@ -23,6 +23,7 @@ model Item {
   id        String  @id @default(uuid())
   submitter String?
   body      String
+  isDumped    Boolean @default(false)
 
   Box        Box?      @relation(fields: [boxId], references: [id])
   boxId      String?
@@ -33,6 +34,7 @@ model Item {
 model ItemDump {
   id    String @id @default(uuid())
   items Item[]
+  createdAt DateTime @default(now())
 
   Box   Box?    @relation(fields: [boxId], references: [id])
   boxId String?
