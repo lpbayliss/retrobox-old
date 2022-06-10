@@ -1,9 +1,9 @@
 import next from "next";
-import express, { json, Request, Response, urlencoded } from "express";
+import express, { json, urlencoded } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
-import { PrismaClient } from "@prisma/client";
+import { HealthRouter } from "./routers";
 
 const port = parseInt(process.env.PORT!, 10) || 3000;
 const isProd = process.env.NODE_ENV === "production";
@@ -15,23 +15,13 @@ const handle = nextApp.getRequestHandler();
   await nextApp.prepare();
   const app = express();
 
-  // if (isProd) app.set('trustproxy', true);
   app.use(compression());
   app.use(json());
   app.use(urlencoded({ extended: true }));
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(cors());
 
-  app.get("/api/health", async (_req: Request, res: Response) => {
-    const prisma = new PrismaClient();
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-      return res.json({ healthy: true });
-    } catch (e) {
-      console.error("DB Not Healthy: ", e.message);
-    }
-    return res.json({ healthy: false });
-  });
+  app.use(HealthRouter);
 
   app.all("*", (req, res) => {
     return handle(req, res);
