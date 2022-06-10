@@ -39,7 +39,7 @@ export const fetchBox = async (id: string): Promise<any> => {
 
   return {
     ...data,
-    lastDump: data.lastDump.toISOString(),
+    lastDump: data.lastDump ? data.lastDump.toISOString() : null,
     itemDumps: data.itemDumps.map((dump) => ({
       ...dump,
       createdAt: dump.createdAt.toISOString(),
