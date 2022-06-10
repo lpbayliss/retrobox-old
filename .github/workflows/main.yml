@@ -14,7 +14,3 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Build & Deploy
         run: flyctl deploy --build-arg FONTAWESOME_NPM_AUTH_TOKEN=${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }} --remote-only
-      - name: Migrate Database
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}

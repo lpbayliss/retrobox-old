@@ -10,7 +10,10 @@ processes = []
   NODE_ENV="production"
 
 [build]
-  build-target = "test"
+  build-target = "runner"
+
+[deploy]
+  release_command = "npm run prisma:deploy"
 
 [experimental]
   allowed_public_ports = []
@@ -18,7 +21,7 @@ processes = []
 
 [[services]]
   http_checks = []
-  internal_port = 3000
+  internal_port = 8080
   processes = ["app"]
   protocol = "tcp"
   script_checks = []

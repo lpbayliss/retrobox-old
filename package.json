@@ -6,6 +6,7 @@
     "dev": "nodemon",
     "build": "next build && tsc --project tsconfig.server.json",
     "start": "node dist/index.js",
+    "prisma:deploy": "prisma migrate deploy",
     "lint": "next lint"
   },
   "repository": {
