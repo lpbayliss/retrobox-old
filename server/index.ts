@@ -3,7 +3,7 @@ import express, { json, urlencoded } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
-import { BoxRouter, DumpRouter, HealthRouter, ItemRouter } from "./routers";
+import { BoxRouter, HealthRouter } from "./routers";
 
 const port = parseInt(process.env.PORT!, 10) || 3000;
 const isProd = process.env.NODE_ENV === "production";
@@ -23,8 +23,6 @@ const handle = nextApp.getRequestHandler();
 
   app.use(HealthRouter);
   app.use(BoxRouter);
-  app.use(ItemRouter);
-  app.use(DumpRouter);
 
   app.all("*", (req, res) => {
     return handle(req, res);
