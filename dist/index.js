@@ -45,6 +45,7 @@ const handle = nextApp.getRequestHandler();
     app.use((0, helmet_1.default)({ contentSecurityPolicy: false }));
     app.use((0, cors_1.default)());
     app.use(routers_1.HealthRouter);
+    app.use(routers_1.BoxRouter);
     app.all("*", (req, res) => {
         return handle(req, res);
     });

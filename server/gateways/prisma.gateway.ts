@@ -11,10 +11,10 @@ const checkHealth = async (): Promise<boolean> => {
   }
 };
 
-export const createBox = async (name: string): Promise<Box> => {
+export const createBox = async (name: string): Promise<any> => {
   const data = await prisma.box.create({
     data: { name },
-    include: { itemDumps: true, items: true },
+    select: { id: true },
   });
 
   return data;
@@ -37,7 +37,14 @@ export const fetchBox = async (id: string): Promise<any> => {
     },
   });
 
-  return data;
+  return {
+    ...data,
+    lastDump: data.lastDump.toISOString(),
+    itemDumps: data.itemDumps.map((dump) => ({
+      ...dump,
+      createdAt: dump.createdAt.toISOString(),
+    })),
+  };
 };
 
 export const createItem = async (
@@ -83,10 +90,13 @@ export const createDump = async (boxId): Promise<any> => {
 export const fetchDump = async (dumpId): Promise<any> => {
   const data = await prisma.itemDump.findUnique({
     where: { id: dumpId },
-    select: { items: true, id: true, createdAt: true },
+    select: {
+      items: { select: { submitter: true, body: true } },
+      createdAt: true,
+    },
   });
 
-  return data;
+  return { ...data, createdAt: data.createdAt.toISOString() };
 };
 
 const gateway = {
