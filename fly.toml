@@ -8,12 +8,13 @@ processes = []
 
 [env]
   NODE_ENV="production"
+  NEXT_PUBLIC_API_URL="https://retrobox.app/api"
 
 [build]
   build-target = "runner"
 
 [deploy]
-  release_command = "npm run prisma:deploy"
+  release_command = "yarn prisma:deploy"
 
 [experimental]
   allowed_public_ports = []

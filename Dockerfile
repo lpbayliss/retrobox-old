@@ -9,7 +9,7 @@ COPY . .
 
 ENV FONTAWESOME_NPM_AUTH_TOKEN ${FONTAWESOME_NPM_AUTH_TOKEN}
 
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
 # Build
 FROM node:18-alpine AS builder
@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN npm run build
+RUN yarn build
 
 # Run
 FROM node:18-alpine AS runner
