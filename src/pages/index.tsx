@@ -5,9 +5,7 @@ import Card from "../components/card";
 import ColorModeButton from "../components/color-mode-button";
 import { api } from "../lib/api";
 
-type Props = { value: any };
-
-const IndexPage: NextPage<Props> = ({ value }) => {
+const IndexPage: NextPage = () => {
   return (
     <Flex flexDir="column">
       <Container maxW="4xl">
@@ -17,7 +15,6 @@ const IndexPage: NextPage<Props> = ({ value }) => {
         </Heading>
         <Card maxW="sm" minH="md">
           <Text>This is a component</Text>
-          <text>{JSON.stringify(value)}</text>
         </Card>
       </Container>
     </Flex>
