@@ -7,19 +7,6 @@ import { api } from "../lib/api";
 
 type Props = { value: any };
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
-) => {
-  const newBox = await api.createBox('some name')
-  await api.addItemToBoxWithId(newBox.id, 'This is a new item!')
-  await api.addItemToBoxWithId(newBox.id, 'This is a new item! 2')
-  await api.createDumpForBoxWithId(newBox.id)
-  await api.addItemToBoxWithId(newBox.id, 'This is a new item! 3')
-  const box = await api.fetchBoxWithId(newBox.id);
-  console.log(box)
-  return { props: { value: box } };
-};
-
 const IndexPage: NextPage<Props> = ({ value }) => {
   return (
     <Flex flexDir="column">
