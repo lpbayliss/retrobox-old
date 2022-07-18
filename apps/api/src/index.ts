@@ -3,7 +3,7 @@ import express, { json, urlencoded } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
-import { BoxRouter, HealthRouter } from "../routers";
+import { BoxRouter, HealthRouter } from "routers";
 
 const port = parseInt(process.env.PORT!, 10) || 3000;
 const isProd = process.env.NODE_ENV === "production";

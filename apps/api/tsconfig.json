@@ -2,7 +2,7 @@
   "extends": "@retrobox/tsconfig/base.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "baseUrl": "./server",
+    "baseUrl": "./src",
     "module": "commonjs",
     "outDir": "dist",
     "target": "es2017",
