@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Base",
+  "display": "Default",
   "compilerOptions": {
     "composite": false,
     "declaration": true,
