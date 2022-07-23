@@ -12,7 +12,9 @@
     "lint": "turbo run lint",
     "clean": "turbo run clean && rimraf node_modules .env",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "docker-compose:up": "docker-compose -f docker-compose.yml up -d"
+    "docker-compose:up": "docker-compose -f docker-compose.yml up -d",
+    "deploy:api": "flyctl deploy --config ./apps/api/fly.toml --dockerfile ./Dockerfile.api",
+    "deploy:web": "flyctl deploy --config ./apps/web/fly.toml --dockerfile ./Dockerfile.web"
   },
   "devDependencies": {
     "eslint-config-custom": "*",

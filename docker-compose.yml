@@ -5,7 +5,7 @@ services:
     container_name: web
     build:
       context: .
-      dockerfile: ./apps/web/Dockerfile
+      dockerfile: ./Dockerfile.web
     restart: always
     ports:
       - 3000:3000
@@ -15,7 +15,7 @@ services:
     container_name: api
     build:
       context: .
-      dockerfile: ./apps/api/Dockerfile
+      dockerfile: ./Dockerfile.api
     restart: always
     ports:
       - 4000:4000
