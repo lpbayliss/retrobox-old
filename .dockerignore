@@ -1,0 +1,8 @@
+README.md
+node_modules
+.env*
+renovate.json
+dist
+.next
+out
+.gitignore

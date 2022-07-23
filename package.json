@@ -11,7 +11,8 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rimraf node_modules .env",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "docker-compose:up": "docker-compose -f docker-compose.yml up -d"
   },
   "devDependencies": {
     "eslint-config-custom": "*",

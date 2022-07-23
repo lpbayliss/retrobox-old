@@ -1,5 +1,14 @@
+/** @type {import('next').NextConfig} */
 const withTM = require("next-transpile-modules")(["ui"]);
+const path = require("path");
 
-module.exports = withTM({
+const nextConfig = withTM({
+  output: "standalone",
   reactStrictMode: true,
+  swcMinify: true,
+  experimental: {
+    outputFileTracingRoot: path.join(__dirname, "../../"),
+  },
 });
+
+module.exports = nextConfig;
