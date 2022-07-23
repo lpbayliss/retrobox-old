@@ -1,11 +1,8 @@
-Dockerfile
-.dockerignore
-node_modules
-npm-debug.log
 README.md
-LICENSE.md
+node_modules
+.env*
+renovate.json
+dist
 .next
-docker
-.git
-.github
-fly.toml
+out
+.gitignore
