@@ -16,7 +16,7 @@
     "ui": "*"
   },
   "devDependencies": {
-    "rimraf": "^3.0.2",
+    "rimraf": "3.0.2",
     "eslint-config-custom": "*",
     "next-transpile-modules": "9.0.0",
     "tsconfig": "*",
