@@ -1,5 +1,5 @@
 {
-  "name": "database",
+  "name": "@retrobox/database",
   "version": "1.0.0",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "eslint": "8.20.0",
-    "eslint-config-custom": "*",
+    "@retrobox/eslint": "*",
     "prisma": "4.1.0",
     "rimraf": "3.0.2",
     "tsconfig": "*",

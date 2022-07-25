@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const withTM = require("next-transpile-modules")(["ui"]);
+const withTM = require("next-transpile-modules")(["@retrobox/ui"]);
 const path = require("path");
 
 const nextConfig = withTM({
