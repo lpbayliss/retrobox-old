@@ -5,6 +5,4 @@ export type CountItemsResult = number;
 export type CreateDropResult = string;
 export type GetTimeOfDropResult = Date;
 
-export interface IBoxRepository {
-
-}
+export interface IBoxRepository {}
