@@ -1,0 +1,3 @@
+{
+  "extends": ["@retrobox/eslint-config-custom"]
+}
