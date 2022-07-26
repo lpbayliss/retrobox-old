@@ -19,9 +19,9 @@ export class InternalError extends ErrorWithMetadata {
 
 export class NotFoundError extends InternalError {
   public readonly meta?: any;
-  constructor(name: string, message: string, meta?: any) {
+  constructor(message: string, meta?: any) {
     super(message, meta);
     Object.setPrototypeOf(this, NotFoundError.prototype);
-    this.name = name;
+    this.name = NotFoundError.name;
   }
 }
