@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "rimraf": "3.0.2",
-    "@retrobox/eslint-config-custom": "*",
+    "eslint-config-custom": "*",
     "next-transpile-modules": "9.0.0",
     "tsconfig": "*",
     "@types/node": "18.0.6",

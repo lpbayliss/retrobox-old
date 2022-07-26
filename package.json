@@ -21,7 +21,7 @@
     "generate": "turbo run generate"
   },
   "devDependencies": {
-    "@retrobox/eslint-config-custom": "*",
+    "eslint-config-custom": "*",
     "prettier": "latest",
     "turbo": "latest"
   },
