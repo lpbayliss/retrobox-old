@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["@retrobox/eslint-config-custom"],
+  "extends": ["eslint-config-custom"],
   "settings": {
     "next": {
       "rootDir": ["apps/*/"]
