@@ -25,3 +25,9 @@ export class NotFoundError extends InternalError {
     this.name = NotFoundError.name;
   }
 }
+
+export type ApplicationError =
+  | Error
+  | ErrorWithMetadata
+  | InternalError
+  | NotFoundError;

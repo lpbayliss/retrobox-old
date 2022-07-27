@@ -4,9 +4,9 @@ import { Response } from "../lib/types";
 
 type DeleteItemResponse = Response<null>;
 
-export const createItemController = () => {
-  const deleteItem = async (req: Request, res: DeleteItemResponse) => {
-    const [err] = itemInteractor.removeItem(req.params.id);
+export const createItemController = () => ({
+  deleteItem: async (req: Request, res: DeleteItemResponse) => {
+    const [err] = await itemInteractor.removeItem(req.params.id);
 
     if (err)
       return res.status(400).send({
@@ -17,9 +17,5 @@ export const createItemController = () => {
       });
 
     return res.status(204).send({ data: null, meta: null });
-  };
-
-  return {
-    deleteItem,
-  };
-};
+  },
+});

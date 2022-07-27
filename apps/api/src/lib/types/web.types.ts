@@ -10,6 +10,8 @@ export type ProblemJson = {
 export type ResponseData<Body, Meta> = {
   data: Body;
   meta: Meta;
-}
+};
 
-export type Response<Data, Meta = any> = ExpressResponse<ProblemJson | ResponseData<Data, Meta>>
+export type Response<Data, Meta = any> = ExpressResponse<
+  ProblemJson | ResponseData<Data, Meta>
+>;

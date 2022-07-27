@@ -21,8 +21,8 @@ model Item {
     id      String  @id @default(cuid())
     author  String?
     message String
-    Box     Box?    @relation(fields: [boxId], references: [id])
-    Drop    Drop?   @relation(fields: [dropId], references: [id])
+    box     Box?    @relation(fields: [boxId], references: [id])
+    drop    Drop?   @relation(fields: [dropId], references: [id])
 
     boxId  String?
     dropId String?

@@ -1,8 +1,20 @@
-import { InteractorResult } from "./app.types";
+import { InteractorResult, RepositoryResult } from "./app.types";
 
-export type RemovedItemResult = InteractorResult<true>;
+// HTTP Response Types
 
+// Interactor Result Types
+export type RemovedItemInteractorResult = InteractorResult<true>;
+
+// Repository Result Types
+export type CreateItemRepositoryResult = RepositoryResult<string>;
+export type DeleteItemRepositoryResult = RepositoryResult<true>;
+
+// Service Interfaces
 export interface IItemRepository {
-  createItem(boxId: string, message: string, author?: string): Promise<{ id: string }>;
-  deleteItem(itemId: string): Promise<true>;
+  create(
+    boxId: string,
+    message: string,
+    author?: string
+  ): CreateItemRepositoryResult;
+  delete(itemId: string): DeleteItemRepositoryResult;
 }

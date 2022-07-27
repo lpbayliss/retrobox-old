@@ -1,16 +1,40 @@
-import { InteractorResult } from "./app.types";
+import { InteractorResult, RepositoryResult } from "./app.types";
+import { Response } from "./web.types";
 
-export type CreatedBoxResult = InteractorResult<string>;
-export type FetchBoxResult = InteractorResult<{}>;
-export type AddedItemResult = InteractorResult<string>;
-export type CreateDropResult = InteractorResult<string>;
+// HTTP Response Types
+export type CreateBoxResponse = Response<{ id: string }>;
+export type FetchBoxResponse = Response<{
+  id: string;
+  itemCount: number;
+  latestDrop: { id: string; itemCount: number; createdAt: Date };
+  allDrops: { id: string; itemCount: number; createdAt: Date }[];
+}>;
+export type AddItemToBoxResponse = Response<{ id: string }>;
+export type CreateDropFromBoxResponse = Response<{ id: string }>;
 
+// Interactor Result Types
+export type CreatedBoxInteractorResult = InteractorResult<string>;
+export type FetchBoxInteractorResult = InteractorResult<{
+  id: string;
+  itemCount: number;
+  latestDrop: { id: string; itemCount: number; createdAt: Date };
+  allDrops: { id: string; itemCount: number; createdAt: Date }[];
+}>;
+export type AddedItemInteractorResult = InteractorResult<string>;
+export type CreateDropInteractorResult = InteractorResult<string>;
+
+// Repository Result Types
+export type CreateBoxRepositoryResult = RepositoryResult<string>;
+export type FetchBoxRepositoryResult = RepositoryResult<{
+  id: string;
+  itemCount: number;
+  drops: { id: string; itemCount: number; createdAt: Date }[];
+} | null>;
+export type EmptyBoxRepositoryResult = RepositoryResult<string[]>;
+
+// Service Interfaces
 export interface IBoxRepository {
-  create(boxName: string): Promise<string>;
-  fetch(boxId: string): Promise<{
-    id: string;
-    itemCount: number;
-    drops: { id: string; itemCount: number; createdAt: Date }[];
-  }>;
-  empty(boxId: string): Promise<string[]>;
+  create(boxName: string): CreateBoxRepositoryResult;
+  fetch(boxId: string): FetchBoxRepositoryResult;
+  empty(boxId: string): EmptyBoxRepositoryResult;
 }

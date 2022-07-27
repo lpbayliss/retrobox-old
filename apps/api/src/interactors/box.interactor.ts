@@ -1,52 +1,60 @@
-import to from "await-to-js";
-import { InternalError } from "../lib/errors";
+import { InternalError, NotFoundError } from "../lib/errors";
 import {
   IDropRepository,
   IItemRepository,
   IBoxRepository,
-  CreatedBoxResult,
-  AddedItemResult,
-  CreateDropResult,
-  FetchBoxResult,
+  CreatedBoxInteractorResult,
+  AddedItemInteractorResult,
+  CreateDropInteractorResult,
+  FetchBoxInteractorResult,
 } from "../lib/types";
 
 export const createBoxInteractor = (
   boxRepository: IBoxRepository,
   itemRepository: IItemRepository,
   dropRepository: IDropRepository
-) => {
-  const createNewBox = async (name: string): Promise<CreatedBoxResult> => {
-    const [err, boxId] = await to(boxRepository.create(name));
+) => ({
+  createNewBox: async (name: string): Promise<CreatedBoxInteractorResult> => {
+    const [err, boxId] = await boxRepository.create(name);
 
     if (err)
       return [
         new InternalError("CreateBoxFailed", "Failed to create new box", err),
-        null,
       ];
 
     return [null, boxId];
-  };
-
-  const fetchBox = async (id: string): Promise<FetchBoxResult> => {
-    const [err, box] = await to(boxRepository.fetch(id));
+  },
+  fetchBox: async (id: string): Promise<FetchBoxInteractorResult> => {
+    const [err, box] = await boxRepository.fetch(id);
 
     if (err)
       return [
         new InternalError("CreateBoxFailed", "Failed to create new box", err),
-        null,
       ];
 
-    return [null, box];
-  };
+    if (!box) return [new NotFoundError(`Could not find box for id ${id}`)];
 
-  const addItemToBox = async (
+    const allDrops = box.drops;
+    const latestDrop = allDrops.sort(
+      (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+    )[0];
+
+    return [
+      null,
+      {
+        id: box.id,
+        itemCount: box.itemCount,
+        allDrops,
+        latestDrop,
+      },
+    ];
+  },
+  addItemToBox: async (
     boxId: string,
     message: string,
     author?: string
-  ): Promise<AddedItemResult> => {
-    const [err, result] = await to(
-      itemRepository.createItem(boxId, message, author)
-    );
+  ): Promise<AddedItemInteractorResult> => {
+    const [err, itemId] = await itemRepository.create(boxId, message, author);
 
     if (err)
       return [
@@ -55,16 +63,14 @@ export const createBoxInteractor = (
           `Failed to add item to box with id ${boxId}`,
           err
         ),
-        null,
       ];
 
-    return [null, result.id];
-  };
-
-  const createDropFromBox = async (
+    return [null, itemId];
+  },
+  createDropFromBox: async (
     boxId: string
-  ): Promise<CreateDropResult> => {
-    const [createErr, dropId] = await to(dropRepository.create(boxId));
+  ): Promise<CreateDropInteractorResult> => {
+    const [createErr, dropId] = await dropRepository.create(boxId);
     if (createErr)
       return [
         new InternalError(
@@ -72,10 +78,9 @@ export const createBoxInteractor = (
           `Failed to create drop`,
           createErr
         ),
-        null,
       ];
 
-    const [emptyErr, itemIds] = await to(boxRepository.empty(boxId));
+    const [emptyErr, itemIds] = await boxRepository.empty(boxId);
     if (emptyErr)
       return [
         new InternalError(
@@ -83,10 +88,9 @@ export const createBoxInteractor = (
           `Failed to empty box with id ${boxId}`,
           emptyErr
         ),
-        null,
       ];
 
-    const [addErr] = await to(dropRepository.addItems(dropId, itemIds));
+    const [addErr] = await dropRepository.addItems(dropId, itemIds);
     if (addErr)
       [
         new InternalError(
@@ -94,16 +98,8 @@ export const createBoxInteractor = (
           `Failed to add items to drop with id ${boxId}`,
           addErr
         ),
-        null,
       ];
 
     return [null, dropId];
-  };
-
-  return {
-    createNewBox,
-    fetchBox,
-    addItemToBox,
-    createDropFromBox,
-  };
-};
+  },
+});
