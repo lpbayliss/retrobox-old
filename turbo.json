@@ -12,18 +12,6 @@
     },
     "dev": {
       "cache": false
-    },
-    "db:migrate:deploy": {
-      "outputs": []
-    },
-    "db:push": {
-      "outputs": []
-    },
-    "db:seed": {
-      "outputs": []
-    },
-    "generate": {
-      "dependsOn": ["^generate"]
     }
   }
 }

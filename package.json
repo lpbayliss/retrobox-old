@@ -15,10 +15,10 @@
     "docker-compose:up": "docker-compose -f docker-compose.yml up -d",
     "deploy:api": "flyctl deploy --config ./apps/api/fly.toml --dockerfile ./Dockerfile.api",
     "deploy:web": "flyctl deploy --config ./apps/web/fly.toml --dockerfile ./Dockerfile.web",
-    "db:migrate:deploy": "turbo run db:migrate:deploy",
-    "db:push": "turbo run db:push",
-    "db:seed": "turbo run db:seed",
-    "generate": "turbo run generate"
+    "db:migrate:deploy": "cd packages/database && yarn run db:migrate:deploy",
+    "db:push": "cd packages/database && db:push",
+    "db:seed": "cd packages/database && db:seed",
+    "generate": "cd packages/database && generate"
   },
   "devDependencies": {
     "eslint-config-custom": "*",
