@@ -23,6 +23,7 @@ export const createBoxRepository = (): IBoxRepository => ({
         where: { id },
         select: {
           id: true,
+          name: true,
           _count: { select: { items: true } },
           drops: {
             select: {
@@ -40,6 +41,7 @@ export const createBoxRepository = (): IBoxRepository => ({
     const mappedBox = box
       ? {
           id: box.id,
+          name: box.name,
           itemCount: box._count.items,
           drops: box.drops.map((drop) => ({
             id: drop.id,

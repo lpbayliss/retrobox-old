@@ -43,6 +43,7 @@ export const createBoxInteractor = (
       null,
       {
         id: box.id,
+        name: box.name,
         itemCount: box.itemCount,
         allDrops,
         latestDrop,

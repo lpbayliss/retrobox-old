@@ -5,6 +5,7 @@ import { Response } from "./web.types";
 export type CreateBoxResponse = Response<{ id: string }>;
 export type FetchBoxResponse = Response<{
   id: string;
+  name: string;
   itemCount: number;
   latestDrop: { id: string; itemCount: number; createdAt: Date };
   allDrops: { id: string; itemCount: number; createdAt: Date }[];
@@ -16,6 +17,7 @@ export type CreateDropFromBoxResponse = Response<{ id: string }>;
 export type CreatedBoxInteractorResult = InteractorResult<string>;
 export type FetchBoxInteractorResult = InteractorResult<{
   id: string;
+  name: string;
   itemCount: number;
   latestDrop: { id: string; itemCount: number; createdAt: Date };
   allDrops: { id: string; itemCount: number; createdAt: Date }[];
@@ -27,6 +29,7 @@ export type CreateDropInteractorResult = InteractorResult<string>;
 export type CreateBoxRepositoryResult = RepositoryResult<string>;
 export type FetchBoxRepositoryResult = RepositoryResult<{
   id: string;
+  name: string;
   itemCount: number;
   drops: { id: string; itemCount: number; createdAt: Date }[];
 } | null>;

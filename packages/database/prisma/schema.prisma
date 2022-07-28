@@ -12,7 +12,7 @@ generator client {
 
 model Box {
     id    String  @id @default(cuid())
-    name  String?
+    name  String
     items Item[]
     drops Drop[]
 }
