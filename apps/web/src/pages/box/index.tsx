@@ -1,18 +1,18 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 
-const Index: NextPage = () => {
+const BoxIndex: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Home</title>
-        <meta name="description" content="Home" />
+        <title>Box</title>
+        <meta name="description" content="Box" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>Home</main>
+      <main>Box</main>
       <footer></footer>
     </div>
   );
 };
 
-export default Index;
+export default BoxIndex;

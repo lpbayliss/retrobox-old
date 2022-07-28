@@ -1,18 +1,18 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 
-const Index: NextPage = () => {
+const DropIndex: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Home</title>
-        <meta name="description" content="Home" />
+        <title>Drop</title>
+        <meta name="description" content="Drop" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>Home</main>
+      <main>Drop</main>
       <footer></footer>
     </div>
   );
 };
 
-export default Index;
+export default DropIndex;
