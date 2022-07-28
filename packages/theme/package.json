@@ -1,0 +1,32 @@
+{
+  "name": "@retrobox/theme",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf .turbo node_modules dist",
+    "dev": "tsup --watch",
+    "format": "prisma format",
+    "lint": "eslint ./src --fix"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.2.4",
+    "@chakra-ui/theme-tools": "^2.0.5"
+  },
+  "devDependencies": {
+    "@retrobox/tsconfig": "*",
+    "eslint": "8.20.0",
+    "eslint-config-custom": "*",
+    "rimraf": "3.0.2",
+    "tsconfig": "*",
+    "tsup": "6.1.3",
+    "tsx": "3.8.0",
+    "typescript": "4.7.4"
+  }
+}
