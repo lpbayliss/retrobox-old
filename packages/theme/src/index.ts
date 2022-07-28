@@ -1,4 +1,3 @@
-
 import { extendTheme } from "@chakra-ui/react";
 import styles from "./styles";
 import semanticTokens from "./semantic-tokens";
