@@ -9,6 +9,10 @@ const nextConfig = withTM({
   experimental: {
     outputFileTracingRoot: path.join(__dirname, "../../"),
   },
+  i18n: {
+    locales: ['en-AU'],
+    defaultLocale: 'en-AU'
+  }
 });
 
 module.exports = nextConfig;
