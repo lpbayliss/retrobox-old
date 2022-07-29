@@ -1,17 +1,15 @@
 import axios from "axios";
 
-export { default as getBox } from "./get-box.api";
-export { default as getDrop } from "./get-drop.api";
-
-export const client = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 1000,
-});
+import { default as getBox } from "./get-box.api";
+import { default as createBox } from "./create-box.api";
+import { default as getDrop } from "./get-drop.api";
 
 export type ResponseData<Body, Meta = {}> = {
   data: Body;
   meta: Meta;
 };
+
+export type CreateBoxResponseData = ResponseData<{ id: string }>;
 
 export type FetchBoxResponseData = ResponseData<{
   id: string;
@@ -26,3 +24,16 @@ export type FetchDropResponseData = ResponseData<{
   createdAt: Date;
   items: { message: string; author: string | null }[];
 }>;
+
+export const client = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  timeout: 1000,
+});
+
+const api = {
+  createBox,
+  getBox,
+  getDrop,
+};
+
+export default api;

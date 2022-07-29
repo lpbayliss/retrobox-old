@@ -3,21 +3,21 @@ import { useQuery } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { getBox } from "../../api";
+import api from "../../api";
 
 type Props = { boxId: string; boxData: any };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const boxData = (await getBox(context.params!.id as string)).data;
+  const boxData = (await api.getBox(context.params!.id as string)).data;
   return { props: { boxId: context.params!.id as string, boxData } };
 };
 
 const BoxPage: NextPage<Props> = (props) => {
   const { data: box } = useQuery(
     ["box", props.boxId],
-    async () => (await getBox(props.boxId)).data,
+    async () => (await api.getBox(props.boxId)).data,
     {
       initialData: props.boxData,
     }
@@ -33,14 +33,16 @@ const BoxPage: NextPage<Props> = (props) => {
       <Box as="main">
         <Text>{box.name}</Text>
         <Text>{box.itemCount} items in this box</Text>
-        <Text>
-          The most recent{" "}
-          <Link href={`/drop/${box.latestDrop.id}`}>
-            <a>drop</a>
-          </Link>{" "}
-          was made on {box.latestDrop.createdAt} with {box.latestDrop.itemCount}{" "}
-          items
-        </Text>
+        {box.latestDrop && (
+          <Text>
+            The most recent{" "}
+            <Link href={`/drop/${box.latestDrop.id}`}>
+              <a>drop</a>
+            </Link>{" "}
+            was made on {box.latestDrop.createdAt} with{" "}
+            {box.latestDrop.itemCount} items
+          </Text>
+        )}
         {box.allDrops.map((drop: any) => (
           <Text key={drop.id}>
             A{" "}

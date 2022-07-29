@@ -1,9 +1,21 @@
+import { Button, Input } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useRouter } from "next/router";
+import { FormattedMessage } from "react-intl";
+import api from "../api";
+import {
+  CreateBoxForm,
+  CreateBoxFormInputs,
+} from "../components/create-box-form";
 
 const Index: NextPage = () => {
-  const intl = useIntl();
+  const router = useRouter();
+
+  const handleOnSubmit = async (input: CreateBoxFormInputs) => {
+    const { data } = await api.createBox(input.name);
+    router.push(`/box/${data.id}`);
+  };
 
   return (
     <div>
@@ -14,6 +26,7 @@ const Index: NextPage = () => {
       </Head>
       <main>
         <FormattedMessage id="HELLO_WORLD" />
+        <CreateBoxForm onSubmit={handleOnSubmit} />
       </main>
       <footer></footer>
     </div>

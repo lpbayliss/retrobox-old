@@ -2,21 +2,21 @@ import { Box, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { getDrop } from "../../api";
+import api from "../../api";
 
 type Props = { dropId: string; dropData: any };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { data } = await getDrop(context.params!.id as string);
+  const { data } = await api.getDrop(context.params!.id as string);
   return { props: { dropId: context.params!.id as string, dropData: data } };
 };
 
 const DropPage: NextPage<Props> = (props) => {
   const { data: drop } = useQuery(
     ["drop", props.dropId],
-    async () => (await getDrop(props.dropId)).data,
+    async () => (await api.getDrop(props.dropId)).data,
     {
       initialData: props.dropData,
     }
