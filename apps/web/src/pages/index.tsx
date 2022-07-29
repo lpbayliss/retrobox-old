@@ -6,13 +6,13 @@ import { FormattedMessage } from "react-intl";
 import api from "../api";
 import {
   CreateBoxForm,
-  CreateBoxFormInputs,
+  ICreateBoxFormInputs,
 } from "../components/create-box-form";
 
 const Index: NextPage = () => {
   const router = useRouter();
 
-  const handleOnSubmit = async (input: CreateBoxFormInputs) => {
+  const handleOnSubmit = async (input: ICreateBoxFormInputs) => {
     const { data } = await api.createBox(input.name);
     router.push(`/box/${data.id}`);
   };
