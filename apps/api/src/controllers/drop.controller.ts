@@ -7,7 +7,7 @@ type FetchDropResponse = Response<{
   id: string;
   createdAt: Date;
   items: { message: string; author: string | null }[];
-} | null>;
+}>;
 
 export const createDropController = () => {
   const fetchDrop = async (req: Request, res: FetchDropResponse) => {

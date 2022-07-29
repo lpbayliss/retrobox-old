@@ -41,7 +41,7 @@ export const createBoxController = () => ({
         });
     }
 
-    return res.status(201).send({ data: box, meta: null });
+    return res.status(200).send({ data: box, meta: null });
   },
   addItem: async (req: Request, res: AddItemToBoxResponse) => {
     const [err, itemId] = await boxInteractor.addItemToBox(
