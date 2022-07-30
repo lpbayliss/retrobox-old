@@ -4,6 +4,7 @@ import { default as getBox } from "./get-box.api";
 import { default as createBox } from "./create-box.api";
 import { default as getDrop } from "./get-drop.api";
 import { default as addItem } from "./add-item.api";
+import { default as createDrop } from "./create-drop.api";
 
 export type ResponseData<Body, Meta = {}> = {
   data: Body;
@@ -11,6 +12,7 @@ export type ResponseData<Body, Meta = {}> = {
 };
 
 export type CreateBoxResponseData = ResponseData<{ id: string }>;
+export type CreateDropResponseData = ResponseData<{ id: string }>;
 
 export type FetchBoxResponseData = ResponseData<{
   id: string;
@@ -36,7 +38,8 @@ const api = {
   createBox,
   getBox,
   getDrop,
-  addItem
+  addItem,
+  createDrop,
 };
 
 export default api;

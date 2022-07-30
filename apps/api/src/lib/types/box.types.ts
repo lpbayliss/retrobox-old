@@ -33,11 +33,13 @@ export type FetchBoxRepositoryResult = RepositoryResult<{
   itemCount: number;
   drops: { id: string; itemCount: number; createdAt: Date }[];
 } | null>;
+export type FetchBoxItemCountRepositoryResult = RepositoryResult<number>;
 export type EmptyBoxRepositoryResult = RepositoryResult<string[]>;
 
 // Service Interfaces
 export interface IBoxRepository {
   create(boxName: string): CreateBoxRepositoryResult;
   fetch(boxId: string): FetchBoxRepositoryResult;
+  fetchItemCount(boxId: string): FetchBoxItemCountRepositoryResult;
   empty(boxId: string): EmptyBoxRepositoryResult;
 }

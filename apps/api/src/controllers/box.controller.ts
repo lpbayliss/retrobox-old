@@ -67,7 +67,7 @@ export const createBoxController = () => ({
       return res.status(400).send({
         title: "https://retrobox.app/probs/couldnt-create-drop",
         status: 400,
-        detail: "Something went wrong while creating a drop",
+        detail: err.message,
         instance: req.originalUrl,
       });
 

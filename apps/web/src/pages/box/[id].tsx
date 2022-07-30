@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
@@ -28,14 +28,26 @@ const BoxPage: NextPage<Props> = (props) => {
     }
   );
 
-  const mutation = useMutation(
+  const addItemMutation = useMutation(
     (newItem: { message: string; author?: string }) => {
       return api.addItem(box.id, newItem.message, newItem.author);
     }
   );
 
+  const createDropMutation = useMutation((boxId: string) => {
+    return api.createDrop(boxId);
+  });
+
   const handleOnSubmit = async (input: ICreateItemFormInputs) => {
-    mutation.mutate(input, {
+    addItemMutation.mutate(input, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["box", props.boxId]);
+      },
+    });
+  };
+
+  const handleCreateDrop = async () => {
+    createDropMutation.mutate(props.boxId, {
       onSuccess: () => {
         queryClient.invalidateQueries(["box", props.boxId]);
       },
@@ -72,8 +84,14 @@ const BoxPage: NextPage<Props> = (props) => {
           </Text>
         ))}
         <CreateItemForm onSubmit={handleOnSubmit} />
-        {mutation.isLoading && <Text>Adding item to box...</Text>}
-        {mutation.isSuccess && <Text>Item added to box...</Text>}
+        {addItemMutation.isLoading && <Text>Adding item to box...</Text>}
+        {addItemMutation.isSuccess && <Text>Item added to box...</Text>}
+      </Box>
+      <Box>
+        <Button onClick={handleCreateDrop}>Create Drop</Button>
+        {createDropMutation.isLoading && <Text>Creating drop...</Text>}
+        {createDropMutation.isSuccess && <Text>Drop created</Text>}
+        {createDropMutation.isError && <Text>Problem creating a drop</Text>}
       </Box>
       <footer></footer>
     </div>

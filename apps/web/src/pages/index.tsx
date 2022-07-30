@@ -19,7 +19,6 @@ const Index: NextPage = () => {
   const handleOnSubmit = async (input: ICreateBoxFormInputs) => {
     mutation.mutate(input, {
       onSuccess: (data) => {
-        // router
         router.push(`/box/${data.data.id}`);
       },
     });

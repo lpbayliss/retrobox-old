@@ -71,6 +71,19 @@ export const createBoxInteractor = (
   createDropFromBox: async (
     boxId: string
   ): Promise<CreateDropInteractorResult> => {
+    const [itemCountErr, itemCount] = await boxRepository.fetchItemCount(boxId);
+    if (itemCountErr)
+      return [
+        new InternalError(
+          "CreateDropFailed",
+          `Failed to find item count for box`,
+          itemCountErr
+        ),
+      ];
+
+    if (itemCount === 0)
+      return [new InternalError("NoItemsInBox", "Cannot create an empty drop")];
+
     const [createErr, dropId] = await dropRepository.create(boxId);
     if (createErr)
       return [

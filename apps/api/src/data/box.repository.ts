@@ -54,6 +54,21 @@ export const createBoxRepository = (): IBoxRepository => ({
     return [null, mappedBox];
   },
 
+  fetchItemCount: async (id) => {
+    const [err, box] = await to(
+      prisma.box.findUnique({
+        where: { id },
+        select: {
+          _count: { select: { items: true } },
+        },
+      })
+    );
+
+    if (err) return [err];
+
+    return [null, box?._count.items || 0];
+  },
+
   empty: async (id) => {
     const [findErr, box] = await to(
       prisma.box.findUnique({
