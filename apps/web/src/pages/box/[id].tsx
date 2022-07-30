@@ -31,16 +31,15 @@ const BoxPage: NextPage<Props> = (props) => {
   const mutation = useMutation(
     (newItem: { message: string; author?: string }) => {
       return api.addItem(box.id, newItem.message, newItem.author);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["box", props.boxId]);
-      },
     }
   );
 
   const handleOnSubmit = async (input: ICreateItemFormInputs) => {
-    mutation.mutate(input);
+    mutation.mutate(input, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["box", props.boxId]);
+      },
+    });
   };
 
   return (

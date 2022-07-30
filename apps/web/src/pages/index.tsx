@@ -1,4 +1,4 @@
-import { Button, Input } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -12,9 +12,17 @@ import {
 const Index: NextPage = () => {
   const router = useRouter();
 
+  const mutation = useMutation((input: { name: string }) => {
+    return api.createBox(input.name);
+  });
+
   const handleOnSubmit = async (input: ICreateBoxFormInputs) => {
-    const { data } = await api.createBox(input.name);
-    router.push(`/box/${data.id}`);
+    mutation.mutate(input, {
+      onSuccess: (data) => {
+        // router
+        router.push(`/box/${data.data.id}`);
+      },
+    });
   };
 
   return (
