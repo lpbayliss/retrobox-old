@@ -3,6 +3,7 @@ import axios from "axios";
 import { default as getBox } from "./get-box.api";
 import { default as createBox } from "./create-box.api";
 import { default as getDrop } from "./get-drop.api";
+import { default as addItem } from "./add-item.api";
 
 export type ResponseData<Body, Meta = {}> = {
   data: Body;
@@ -24,6 +25,7 @@ export type FetchDropResponseData = ResponseData<{
   createdAt: Date;
   items: { message: string; author: string | null }[];
 }>;
+export type AddItemResponseData = ResponseData<{ id: string }>;
 
 export const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -34,6 +36,7 @@ const api = {
   createBox,
   getBox,
   getDrop,
+  addItem
 };
 
 export default api;

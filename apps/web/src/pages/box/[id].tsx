@@ -1,9 +1,12 @@
 import { Box, Text } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import api from "../../api";
+import CreateItemForm, {
+  ICreateItemFormInputs,
+} from "../../components/create-item-form/create-item-form.component";
 
 type Props = { boxId: string; boxData: any };
 
@@ -15,6 +18,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 const BoxPage: NextPage<Props> = (props) => {
+  const queryClient = useQueryClient();
+
   const { data: box } = useQuery(
     ["box", props.boxId],
     async () => (await api.getBox(props.boxId)).data,
@@ -22,6 +27,21 @@ const BoxPage: NextPage<Props> = (props) => {
       initialData: props.boxData,
     }
   );
+
+  const mutation = useMutation(
+    (newItem: { message: string; author?: string }) => {
+      return api.addItem(box.id, newItem.message, newItem.author);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["box", props.boxId]);
+      },
+    }
+  );
+
+  const handleOnSubmit = async (input: ICreateItemFormInputs) => {
+    mutation.mutate(input);
+  };
 
   return (
     <div>
@@ -52,6 +72,9 @@ const BoxPage: NextPage<Props> = (props) => {
             was made on {drop.createdAt} with {drop.itemCount} items
           </Text>
         ))}
+        <CreateItemForm onSubmit={handleOnSubmit} />
+        {mutation.isLoading && <Text>Adding item to box...</Text>}
+        {mutation.isSuccess && <Text>Item added to box...</Text>}
       </Box>
       <footer></footer>
     </div>
