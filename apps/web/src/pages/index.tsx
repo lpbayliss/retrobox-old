@@ -1,13 +1,30 @@
+import { Box, Flex, Heading, Text, Tooltip } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import api from "../api";
+import { Card } from "../components/card";
 import {
   CreateBoxForm,
   ICreateBoxFormInputs,
 } from "../components/create-box-form";
+
+const AddToolTip = (chunks: string[]) => {
+  const intl = useIntl();
+  return (
+    <Tooltip
+      hasArrow
+      label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
+      aria-label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
+    >
+      <Text display="inline" as="u">
+        {chunks}
+      </Text>
+    </Tooltip>
+  );
+};
 
 const Index: NextPage = () => {
   const router = useRouter();
@@ -31,10 +48,25 @@ const Index: NextPage = () => {
         <meta name="description" content="Home" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <FormattedMessage id="HELLO_WORLD" />
-        <CreateBoxForm onSubmit={handleOnSubmit} />
-      </main>
+      <Flex as="main" h="100vh">
+        <Card mx="auto" my="auto" maxW="xl" pb="14">
+          <Box mx="auto" fontSize="6xl">
+            📦
+          </Box>
+          <Heading size="4xl" pb="4" mx="auto">
+            <FormattedMessage id="RETROBOX" />
+          </Heading>
+          <Text mx="auto" maxW="xs" pb="4" color="grey" fontSize="sm">
+            <FormattedMessage
+              id="APP_DESCRIPTION"
+              values={{
+                info: AddToolTip,
+              }}
+            />
+          </Text>
+          <CreateBoxForm mx="auto" minW="xs" onSubmit={handleOnSubmit} />
+        </Card>
+      </Flex>
       <footer></footer>
     </div>
   );

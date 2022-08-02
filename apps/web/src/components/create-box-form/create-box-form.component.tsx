@@ -1,5 +1,16 @@
-import { Button, FormControl, FormErrorMessage, Input } from "@chakra-ui/react";
+import {
+  Button,
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Input,
+  StackProps,
+  VStack,
+} from "@chakra-ui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export type ICreateBoxFormInputs = {
   name: string;
@@ -9,7 +20,9 @@ type Props = {
   onSubmit(data: ICreateBoxFormInputs): void;
 };
 
-const CreateBoxForm = ({ onSubmit }: Props) => {
+const CreateBoxForm = ({ onSubmit, ...props }: Props & Omit<StackProps, 'onSubmit'>) => {
+  const intl = useIntl();
+
   const {
     register,
     handleSubmit,
@@ -20,25 +33,37 @@ const CreateBoxForm = ({ onSubmit }: Props) => {
     onSubmit(data);
 
   return (
-    <form onSubmit={handleSubmit(handleOnSubmit)}>
+    <VStack as="form" onSubmit={handleSubmit(handleOnSubmit)} spacing="4" {...props}>
       <FormControl isInvalid={!!errors.name}>
+        <FormLabel>
+          <FormattedMessage id="CREATE_BOX_LABEL" />
+        </FormLabel>
         <Input
           variant="filled"
           id="name"
-          placeholder="Name Your Retro Box"
+          placeholder={intl.formatMessage({ id: "CREATE_BOX_PLACEHOLDER" })}
           {...register("name", {
-            required: "This is required",
-            minLength: { value: 4, message: "Minimum length should be 4" },
+            required: intl.formatMessage({ id: "CREATE_BOX_ERROR_REQUIRED" }),
+            minLength: {
+              value: 4,
+              message: intl.formatMessage({
+                id: "CREATE_BOX_ERROR_MIN_LENGTH",
+              }),
+            },
           })}
         />
+        <FormHelperText>
+          <FormattedMessage id="CREATE_BOX_HELPER_TEXT" />
+        </FormHelperText>
         <FormErrorMessage>
           {errors.name && errors.name.message}
         </FormErrorMessage>
       </FormControl>
-      <Button type="submit" isLoading={isSubmitting}>
-        Create Retro Box
+      <Divider/>
+      <Button type="submit" isLoading={isSubmitting} w="full">
+        <FormattedMessage id="CREATE_BOX_BUTTON" />
       </Button>
-    </form>
+    </VStack>
   );
 };
 
