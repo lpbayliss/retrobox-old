@@ -49,7 +49,7 @@ const Index: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Flex as="main" h="100vh">
-        <Card mx="auto" my="auto" maxW="xl" pb="14">
+        <Card mx="auto" my="auto" maxW="xl" minW="xl" pb="14">
           <Box mx="auto" fontSize="6xl">
             📦
           </Box>

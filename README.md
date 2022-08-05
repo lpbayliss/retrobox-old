@@ -72,6 +72,11 @@ Learn more about the power of Turborepo:
 - [Pipelines](https://turborepo.org/docs/core-concepts/pipelines)
 - [Caching](https://turborepo.org/docs/core-concepts/caching)
 - [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching)
-- [Scoped Tasks](https://turborepo.org/docs/core-concepts/scopes)
+- ~~[Scoped Tasks](https://turborepo.org/docs/core-concepts/scopes)~~
 - [Configuration Options](https://turborepo.org/docs/reference/configuration)
 - [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)
+
+
+`docker run -itd --name retrobox-db -e POSTGRES_USER=retrobox -e POSTGRES_PASSWORD=secret -p 5432:5432`
+
+`docker run -d --name retrobox-postgres -p 5433:5432 -e POSTGRES_PASSWORD=secret -e POSTGRES_USER=retrobox postgres`

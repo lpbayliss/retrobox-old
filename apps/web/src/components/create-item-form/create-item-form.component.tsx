@@ -1,10 +1,12 @@
 import {
   Button,
+  Divider,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Input,
+  VStack,
 } from "@chakra-ui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -28,7 +30,7 @@ const CreateItemForm = ({ onSubmit }: Props) => {
     onSubmit(data);
 
   return (
-    <form onSubmit={handleSubmit(handleOnSubmit)}>
+    <VStack as="form" onSubmit={handleSubmit(handleOnSubmit)}>
       <FormControl isInvalid={!!errors.author}>
         <FormLabel>Your Name</FormLabel>
         <Input
@@ -61,11 +63,11 @@ const CreateItemForm = ({ onSubmit }: Props) => {
           {errors.message && errors.message.message}
         </FormErrorMessage>
       </FormControl>
-
-      <Button type="submit" isLoading={isSubmitting}>
+      <Divider />
+      <Button type="submit" w="full" isLoading={isSubmitting}>
         Submit Item
       </Button>
-    </form>
+    </VStack>
   );
 };
 

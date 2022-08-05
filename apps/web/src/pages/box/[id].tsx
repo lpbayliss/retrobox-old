@@ -1,9 +1,20 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Heading,
+  Text,
+  useControllableState,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import api from "../../api";
+import { Card } from "../../components/card";
 import CreateItemForm, {
   ICreateItemFormInputs,
 } from "../../components/create-item-form/create-item-form.component";
@@ -18,6 +29,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 const BoxPage: NextPage<Props> = (props) => {
+  const toast = useToast();
   const queryClient = useQueryClient();
 
   const { data: box } = useQuery(
@@ -42,6 +54,24 @@ const BoxPage: NextPage<Props> = (props) => {
     addItemMutation.mutate(input, {
       onSuccess: () => {
         queryClient.invalidateQueries(["box", props.boxId]);
+        toast({
+          title: "Item Added",
+          description: "We've added a new item for you",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
+      },
+      onError: () => {
+        toast({
+          title: "Failed to add item",
+          description: "Something went wrong trying to add an item",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
       },
     });
   };
@@ -50,6 +80,24 @@ const BoxPage: NextPage<Props> = (props) => {
     createDropMutation.mutate(props.boxId, {
       onSuccess: () => {
         queryClient.invalidateQueries(["box", props.boxId]);
+        toast({
+          title: "Drop Created",
+          description: "We've created a new drop for you",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
+      },
+      onError: () => {
+        toast({
+          title: "Failed to create drop",
+          description: "Something went wrong trying to create a drop",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
       },
     });
   };
@@ -61,38 +109,58 @@ const BoxPage: NextPage<Props> = (props) => {
         <meta name="description" content="Box" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box as="main">
-        <Text>{box.name}</Text>
-        <Text>{box.itemCount} items in this box</Text>
-        {box.latestDrop && (
-          <Text>
-            The most recent{" "}
-            <Link href={`/drop/${box.latestDrop.id}`}>
-              <a>drop</a>
-            </Link>{" "}
-            was made on {box.latestDrop.createdAt} with{" "}
-            {box.latestDrop.itemCount} items
-          </Text>
-        )}
-        {box.allDrops.map((drop: any) => (
-          <Text key={drop.id}>
-            A{" "}
-            <Link href={`/drop/${drop.id}`}>
-              <a>drop</a>
-            </Link>{" "}
-            was made on {drop.createdAt} with {drop.itemCount} items
-          </Text>
-        ))}
-        <CreateItemForm onSubmit={handleOnSubmit} />
-        {addItemMutation.isLoading && <Text>Adding item to box...</Text>}
-        {addItemMutation.isSuccess && <Text>Item added to box...</Text>}
-      </Box>
-      <Box>
-        <Button onClick={handleCreateDrop}>Create Drop</Button>
-        {createDropMutation.isLoading && <Text>Creating drop...</Text>}
-        {createDropMutation.isSuccess && <Text>Drop created</Text>}
-        {createDropMutation.isError && <Text>Problem creating a drop</Text>}
-      </Box>
+      <Flex as="main" h="100vh">
+        <VStack mx="auto" my="auto" maxW="xl" spacing="4">
+          <Card w="full">
+            <VStack align={"flex-start"}>
+              <Heading as="h1">{box.name}</Heading>
+              <Text color="grey" fontSize="sm">
+                {box.itemCount} items in this box
+              </Text>
+              {box.latestDrop && (
+                <Text>
+                  The most recent{" "}
+                  <Link href={`/drop/${box.latestDrop.id}`}>
+                    <a>drop</a>
+                  </Link>{" "}
+                  was made on {box.latestDrop.createdAt} with{" "}
+                  {box.latestDrop.itemCount} items
+                </Text>
+              )}
+              <Divider />
+              <Button
+                isLoading={createDropMutation.isLoading}
+                onClick={handleCreateDrop}
+                w="full"
+              >
+                Create Drop
+              </Button>
+            </VStack>
+          </Card>
+          <Card w="full">
+            <Heading as="h2" size="md" mb="3">
+              Add Item
+            </Heading>
+            <CreateItemForm onSubmit={handleOnSubmit} />
+          </Card>
+          {box.allDrops.length && (
+            <Card w="full">
+              <Heading as="h2" size="md" mb="3">
+                Previous Drops
+              </Heading>
+              {box.allDrops.map((drop: any) => (
+                <Text key={drop.id}>
+                  A{" "}
+                  <Link href={`/drop/${drop.id}`}>
+                    <a>drop</a>
+                  </Link>{" "}
+                  was made on {drop.createdAt} with {drop.itemCount} items
+                </Text>
+              ))}
+            </Card>
+          )}
+        </VStack>
+      </Flex>
       <footer></footer>
     </div>
   );
