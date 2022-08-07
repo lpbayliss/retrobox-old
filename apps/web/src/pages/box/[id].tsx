@@ -110,9 +110,9 @@ const BoxPage: NextPage<Props> = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Flex as="main" h="100vh">
-        <VStack mx="auto" my="auto" maxW="xl" spacing="4">
-          <Card w="full">
-            <VStack align={"flex-start"}>
+        <VStack mx="auto" my="auto" maxW="xl" minW="xl" spacing="4">
+          <Card w="full" py="14">
+            <VStack align={"flex-start"} w="sm" mx="auto">
               <Heading as="h1">{box.name}</Heading>
               <Text color="grey" fontSize="sm">
                 {box.itemCount} items in this box
@@ -137,26 +137,30 @@ const BoxPage: NextPage<Props> = (props) => {
               </Button>
             </VStack>
           </Card>
-          <Card w="full">
-            <Heading as="h2" size="md" mb="3">
-              Add Item
-            </Heading>
-            <CreateItemForm onSubmit={handleOnSubmit} />
+          <Card w="full" py="14">
+            <Box w="sm" mx="auto">
+              <Heading as="h2" size="md" mb="3">
+                Add Item
+              </Heading>
+              <CreateItemForm onSubmit={handleOnSubmit} />
+            </Box>
           </Card>
           {box.allDrops.length && (
-            <Card w="full">
-              <Heading as="h2" size="md" mb="3">
-                Previous Drops
-              </Heading>
-              {box.allDrops.map((drop: any) => (
-                <Text key={drop.id}>
-                  A{" "}
-                  <Link href={`/drop/${drop.id}`}>
-                    <a>drop</a>
-                  </Link>{" "}
-                  was made on {drop.createdAt} with {drop.itemCount} items
-                </Text>
-              ))}
+            <Card w="full" py="14">
+              <Box w="sm" mx="auto">
+                <Heading as="h2" size="md" mb="3">
+                  Previous Drops
+                </Heading>
+                {box.allDrops.map((drop: any) => (
+                  <Text key={drop.id}>
+                    A{" "}
+                    <Link href={`/drop/${drop.id}`}>
+                      <a>drop</a>
+                    </Link>{" "}
+                    was made on {drop.createdAt} with {drop.itemCount} items
+                  </Text>
+                ))}
+              </Box>
             </Card>
           )}
         </VStack>
