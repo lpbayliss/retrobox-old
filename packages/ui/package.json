@@ -9,7 +9,7 @@
     "clean": "rimraf .turbo node_modules .next out"
   },
   "devDependencies": {
-    "@types/react": "18.0.15",
+    "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
     "eslint": "8.21.0",
     "eslint-config-custom": "*",
