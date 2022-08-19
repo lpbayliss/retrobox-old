@@ -1,39 +1,28 @@
-# Turborepo starter
+# Retrobox
 
-This is an official Yarn v1 starter turborepo.
+Retrobox is a tiny utility for collecting and sharing retro items so you don't forget about them on the big day.
 
 ## What's inside?
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following packages/apps:
+This project uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following packages/apps:
 
 ### Apps and Packages
 
-- `docs`: a [Next.js](https://nextjs.org) app
-- `web`: another [Next.js](https://nextjs.org) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
+- `api`: An Express API applying some Clean Architecture patterns
+- `web`: An [Next.js](https://nextjs.org) app
+- `ui`: React component library
+- `them`: Chakra UI theme config
+- `database`: Prisma config
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
 ## Setup
-
-This repository is used in the `npx create-turbo` command, and selected when choosing which package manager you wish to use with your monorepo (Yarn).
 
 ### Build
 
 To build all apps and packages, run the following command:
 
 ```
-cd my-turborepo
 yarn run build
 ```
 
@@ -42,41 +31,24 @@ yarn run build
 To develop all apps and packages, run the following command:
 
 ```
-cd my-turborepo
 yarn run dev
 ```
 
-### Remote Caching
+### Database
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+You can use the following commands for managing the database and migrations
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+- `db:migrate:deploy`
+- `db:push`
+- `db:seed`
+- `generate`
 
-```
-cd my-turborepo
-npx turbo login
-```
+### Deploy
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Retrobox is hosted on Fly.io, each deployment is separate and can be done with the `deploy:api` or `deploy:web` commands
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
+## Docker
 
-```
-npx turbo link
-```
+You can spin up a postrgres database with the following command, ensuring you have docker installed already of course.
 
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Pipelines](https://turborepo.org/docs/core-concepts/pipelines)
-- [Caching](https://turborepo.org/docs/core-concepts/caching)
-- [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching)
-- ~~[Scoped Tasks](https://turborepo.org/docs/core-concepts/scopes)~~
-- [Configuration Options](https://turborepo.org/docs/reference/configuration)
-- [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)
-
-
-`docker run -itd --name retrobox-db -e POSTGRES_USER=retrobox -e POSTGRES_PASSWORD=secret -p 5432:5432`
-
-`docker run -d --name retrobox-postgres -p 5433:5432 -e POSTGRES_PASSWORD=secret -e POSTGRES_USER=retrobox postgres`
+`docker run -d --name retrobox-postgres -p 5432:5432 -e POSTGRES_PASSWORD=secret -e POSTGRES_USER=retrobox postgres`
