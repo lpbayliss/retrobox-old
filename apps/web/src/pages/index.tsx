@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -11,22 +11,8 @@ import {
   ICreateBoxFormInputs,
 } from "../components/create-box-form";
 
-const AddToolTip = (chunks: string[]) => {
-  const intl = useIntl();
-  return (
-    <Tooltip
-      hasArrow
-      label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
-      aria-label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
-    >
-      <Text display="inline" as="u">
-        {chunks}
-      </Text>
-    </Tooltip>
-  );
-};
-
 const Index: NextPage = () => {
+  const intl = useIntl();
   const router = useRouter();
 
   const mutation = useMutation((input: { name: string }) => {
@@ -57,12 +43,7 @@ const Index: NextPage = () => {
             <FormattedMessage id="RETROBOX" />
           </Heading>
           <Text mx="auto" maxW="xs" pb="4" color="grey" fontSize="sm">
-            <FormattedMessage
-              id="APP_DESCRIPTION"
-              values={{
-                info: AddToolTip,
-              }}
-            />
+            <FormattedMessage id="APP_DESCRIPTION" />
           </Text>
           <CreateBoxForm mx="auto" minW="xs" onSubmit={handleOnSubmit} />
         </Card>

@@ -12,6 +12,7 @@ import {
   Tfoot,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useToast,
   VStack,
@@ -159,9 +160,19 @@ const BoxPage: NextPage<Props> = (props) => {
             {/* DROPS */}
             <Card w="full" py="6" gap="8">
               <VStack w="sm" mx="auto" gap="1" align="start">
-                <Heading as="h2" size="lg" mb="3">
-                  Drops
-                </Heading>
+                <Tooltip
+                  bg="gray.700"
+                  p="3"
+                  hasArrow
+                  placement="right"
+                  label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
+                  aria-label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
+                >
+                  <Heading as="h2" size="lg" mb="3">
+                    Drops
+                  </Heading>
+                </Tooltip>
+
                 {box.latestDrop && (
                   <>
                     <Heading as="h3" size="md" mb="3">

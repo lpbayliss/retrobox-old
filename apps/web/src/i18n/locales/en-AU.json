@@ -1,6 +1,6 @@
 {
   "RETROBOX": "Retrobox",
-  "APP_DESCRIPTION": "Retrobox is like a virtual suggestion box. Create a box for you or your team to put items into, then at your next retrospective you can <info>drop</info> the items out to review them.",
+  "APP_DESCRIPTION": "Retrobox is like a virtual suggestion box. Create a box for you or your team to put items into, then at your next retrospective you can drop the items out to review them.",
   "BOX_EXPLANATION": "A drop is a collection of items that were emptied from a box at a given point in time",
   "CREATE_BOX_LABEL": "Name",
   "CREATE_BOX_PLACEHOLDER": "The Old Republic",
