@@ -12,7 +12,6 @@ import {
 } from "../components/create-box-form";
 
 const Index: NextPage = () => {
-  const intl = useIntl();
   const router = useRouter();
 
   const mutation = useMutation((input: { name: string }) => {
