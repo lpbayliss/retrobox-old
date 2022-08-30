@@ -4,15 +4,24 @@ import {
   Divider,
   Flex,
   Heading,
+  Link,
+  Table,
+  Tbody,
+  Td,
   Text,
-  useControllableState,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
+import { default as NextLink } from "next/link";
+import { useRouter } from "next/router";
+import { FormattedDate, useIntl } from "react-intl";
 import api from "../../api";
 import { Card } from "../../components/card";
 import CreateItemForm, {
@@ -29,6 +38,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 const BoxPage: NextPage<Props> = (props) => {
+  const { asPath } = useRouter();
+  const intl = useIntl();
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -55,8 +66,8 @@ const BoxPage: NextPage<Props> = (props) => {
       onSuccess: () => {
         queryClient.invalidateQueries(["box", props.boxId]);
         toast({
-          title: "Item Added",
-          description: "We've added a new item for you",
+          title: intl.formatMessage({ id: "ITEM_ADDED_SUCCESS_TITLE" }),
+          description: intl.formatMessage({ id: "ITEM_ADDED_SUCCESS_MESSAGE" }),
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -65,8 +76,8 @@ const BoxPage: NextPage<Props> = (props) => {
       },
       onError: () => {
         toast({
-          title: "Failed to add item",
-          description: "Something went wrong trying to add an item",
+          title: intl.formatMessage({ id: "ITEM_ADDED_FAILED_TITLE" }),
+          description: intl.formatMessage({ id: "ITEM_ADDED_FAILED_MESSAGE" }),
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -81,8 +92,10 @@ const BoxPage: NextPage<Props> = (props) => {
       onSuccess: () => {
         queryClient.invalidateQueries(["box", props.boxId]);
         toast({
-          title: "Drop Created",
-          description: "We've created a new drop for you",
+          title: intl.formatMessage({ id: "DROP_CREATED_SUCCESS_TITLE" }),
+          description: intl.formatMessage({
+            id: "DROP_CREATED_SUCCESS_MESSAGE",
+          }),
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -91,8 +104,10 @@ const BoxPage: NextPage<Props> = (props) => {
       },
       onError: () => {
         toast({
-          title: "Failed to create drop",
-          description: "Something went wrong trying to create a drop",
+          title: intl.formatMessage({ id: "DROP_CREATED_FAILED_TITLE" }),
+          description: intl.formatMessage({
+            id: "DROP_CREATED_FAILED_MESSAGE",
+          }),
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -102,6 +117,9 @@ const BoxPage: NextPage<Props> = (props) => {
     });
   };
 
+  const handleCopyLink = () =>
+    navigator.clipboard.writeText(window.location.origin + asPath);
+
   return (
     <div>
       <Head>
@@ -110,59 +128,122 @@ const BoxPage: NextPage<Props> = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Flex as="main" h="100vh">
-        <VStack mx="auto" my="auto" maxW="xl" minW="xl" spacing="4">
-          <Card w="full" py="14">
-            <VStack align={"flex-start"} w="sm" mx="auto">
-              <Heading as="h1">{box.name}</Heading>
-              <Text color="grey" fontSize="sm">
-                {box.itemCount} items in this box
-              </Text>
-              {box.latestDrop && (
-                <Text>
-                  The most recent{" "}
-                  <Link href={`/drop/${box.latestDrop.id}`}>
-                    <a>drop</a>
-                  </Link>{" "}
-                  was made on {box.latestDrop.createdAt} with{" "}
-                  {box.latestDrop.itemCount} items
-                </Text>
-              )}
-              <Divider />
-              <Button
-                isLoading={createDropMutation.isLoading}
-                onClick={handleCreateDrop}
-                w="full"
-              >
-                Create Drop
-              </Button>
-            </VStack>
+        <VStack mx="auto" my="auto" spacing="4">
+          {/* TITLE */}
+          <Card flexDir="row" w="full" py="8">
+            <Heading as="h1">{box.name}</Heading>
+            <Button onClick={handleCopyLink} ml="auto">
+              Copy Link
+            </Button>
           </Card>
-          <Card w="full" py="14">
-            <Box w="sm" mx="auto">
-              <Heading as="h2" size="md" mb="3">
-                Add Item
-              </Heading>
-              <CreateItemForm onSubmit={handleOnSubmit} />
-            </Box>
-          </Card>
-          {box.allDrops.length && (
-            <Card w="full" py="14">
+
+          <Flex flexDir={["column", null, null, "row"]} gap="4">
+            {/* ITEMS */}
+            <Card w="full" py="6" gap="8">
               <Box w="sm" mx="auto">
-                <Heading as="h2" size="md" mb="3">
-                  Previous Drops
+                <Heading as="h2" size="lg" mb="3">
+                  Box
                 </Heading>
-                {box.allDrops.map((drop: any) => (
-                  <Text key={drop.id}>
-                    A{" "}
-                    <Link href={`/drop/${drop.id}`}>
-                      <a>drop</a>
-                    </Link>{" "}
-                    was made on {drop.createdAt} with {drop.itemCount} items
-                  </Text>
-                ))}
+                <Text color="grey" fontSize="sm">
+                  {box.itemCount} item(s) in this box currently
+                </Text>
+              </Box>
+              <Box w="sm" mx="auto">
+                <Heading as="h3" size="md" mb="3">
+                  Add Item
+                </Heading>
+                <CreateItemForm onSubmit={handleOnSubmit} />
               </Box>
             </Card>
-          )}
+
+            {/* DROPS */}
+            <Card w="full" py="6" gap="8">
+              <VStack w="sm" mx="auto" gap="1" align="start">
+                <Heading as="h2" size="lg" mb="3">
+                  Drops
+                </Heading>
+                {box.latestDrop && (
+                  <>
+                    <Heading as="h3" size="md" mb="3">
+                      Most Recent
+                    </Heading>
+                    <Text>
+                      The most recent{" "}
+                      <NextLink href={`/drop/${box.latestDrop.id}`}>
+                        <Link>drop</Link>
+                      </NextLink>{" "}
+                      was on{" "}
+                      <FormattedDate
+                        value={box.latestDrop.createdAt}
+                        dateStyle="full"
+                      />{" "}
+                      with {box.latestDrop.itemCount} items
+                    </Text>
+                  </>
+                )}
+                {box.itemCount && (
+                  <Text>
+                    You can can currently drop {box.itemCount} item(s)
+                  </Text>
+                )}
+                {!box.itemCount && (
+                  <Text>There are no items to drop, add some?</Text>
+                )}
+                <Button
+                  isLoading={createDropMutation.isLoading}
+                  onClick={handleCreateDrop}
+                  isDisabled={!box.itemCount}
+                  w="full"
+                >
+                  Create Drop
+                </Button>
+              </VStack>
+              <Box w="sm" mx="auto">
+                <Heading as="h2" size="md" mb="3">
+                  All Drops
+                </Heading>
+                {!!box.allDrops.length && (
+                  <Table>
+                    <Thead>
+                      <Tr>
+                        <Th>Dropped on</Th>
+                        <Th isNumeric>Item Count</Th>
+                        <Th>Link</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {box.allDrops.map((drop: any) => (
+                        <Tr key={drop.id}>
+                          <Td>
+                            <FormattedDate
+                              value={drop.createdAt}
+                              dateStyle="full"
+                            />
+                          </Td>
+                          <Td isNumeric>{drop.itemCount}</Td>
+                          <Td>
+                            <NextLink href={`/drop/${drop.id}`} passHref>
+                              <Link>View</Link>
+                            </NextLink>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                    <Tfoot>
+                      <Tr>
+                        <Th>Dropped on</Th>
+                        <Th isNumeric>Item Count</Th>
+                        <Th>Link</Th>
+                      </Tr>
+                    </Tfoot>
+                  </Table>
+                )}
+                {!box.allDrops.length && (
+                  <Text>You haven&apos;t dropped anything yet</Text>
+                )}
+              </Box>
+            </Card>
+          </Flex>
         </VStack>
       </Flex>
       <footer></footer>

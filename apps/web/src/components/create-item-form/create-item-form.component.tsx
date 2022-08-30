@@ -9,6 +9,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { FormattedMessage, useIntl } from "react-intl";
+import { useEffect } from "react";
 
 export type ICreateItemFormInputs = {
   author: string;
@@ -20,11 +22,18 @@ type Props = {
 };
 
 const CreateItemForm = ({ onSubmit }: Props) => {
+  const intl = useIntl();
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+    reset,
   } = useForm<ICreateItemFormInputs>();
+
+  useEffect(() => {
+    reset({ message: "" });
+  }, [isSubmitSuccessful, reset]);
 
   const handleOnSubmit: SubmitHandler<ICreateItemFormInputs> = (data) =>
     onSubmit(data);
@@ -32,7 +41,9 @@ const CreateItemForm = ({ onSubmit }: Props) => {
   return (
     <VStack as="form" onSubmit={handleSubmit(handleOnSubmit)}>
       <FormControl isInvalid={!!errors.author}>
-        <FormLabel>Your Name</FormLabel>
+        <FormLabel>
+          <FormattedMessage id="CREATE_ITEM_NAME_LABEL" />
+        </FormLabel>
         <Input
           variant="filled"
           id="author"
@@ -40,7 +51,7 @@ const CreateItemForm = ({ onSubmit }: Props) => {
           {...register("author")}
         />
         <FormHelperText>
-          (Optional) Let your team know who added this item
+          <FormattedMessage id="CREATE_ITEM_NAME_HELPER_TEST" />
         </FormHelperText>
         <FormErrorMessage>
           {errors.author && errors.author.message}
@@ -48,24 +59,30 @@ const CreateItemForm = ({ onSubmit }: Props) => {
       </FormControl>
 
       <FormControl isInvalid={!!errors.message}>
-        <FormLabel>Retro Item</FormLabel>
+        <FormLabel>
+          <FormattedMessage id="CREATE_ITEM_RETRO_ITEM_LABEL" />
+        </FormLabel>
         <Input
           variant="filled"
           id="message"
           placeholder="There isn't enough blue milk"
           {...register("message", {
-            required: "You must include a message as part of your submission",
+            required: intl.formatMessage({
+              id: "CREATE_ITEM_NAME_NO_CONTENT_ERROR",
+            }),
             minLength: { value: 5, message: "Minimum length should be 5" },
           })}
         />
-        <FormHelperText>Let your team know who added this item</FormHelperText>
+        <FormHelperText>
+          <FormattedMessage id="CREATE_ITEM_RETRO_ITEM_HELPER_TEST" />
+        </FormHelperText>
         <FormErrorMessage>
           {errors.message && errors.message.message}
         </FormErrorMessage>
       </FormControl>
       <Divider />
       <Button type="submit" w="full" isLoading={isSubmitting}>
-        Submit Item
+        <FormattedMessage id="CREATE_ITEM_SUBMIT_LABEL" />
       </Button>
     </VStack>
   );

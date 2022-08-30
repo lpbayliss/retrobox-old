@@ -1,7 +1,9 @@
-import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { FormattedDate } from "react-intl";
 import api, { FetchDropResponseData } from "../../api";
 import { Card } from "../../components/card";
 
@@ -22,6 +24,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 const DropPage: NextPage<Props> = (props) => {
+  const { asPath } = useRouter();
+
   const { data: drop } = useQuery(
     ["drop", props.dropId],
     async () => (await api.getDrop(props.dropId)).data,
@@ -29,6 +33,9 @@ const DropPage: NextPage<Props> = (props) => {
       initialData: props.dropData,
     }
   );
+
+  const handleCopyLink = () =>
+    navigator.clipboard.writeText(window.location.origin + asPath);
 
   return (
     <div>
@@ -38,19 +45,37 @@ const DropPage: NextPage<Props> = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Flex as="main" h="100vh">
-        <VStack mx="auto" my="auto" maxW="xl" minW="xl" spacing="4">
-          <Card w="full" py="14">
-            <Box w="sm" mx="auto">
-              <Heading as="h2" pb="6">
-                Drop for {new Date(drop.createdAt).toDateString()}
+        <VStack
+          mx="auto"
+          my="auto"
+          minW={["sm", null, "2xl"]}
+          spacing="4"
+        >
+          <Card flexDir="row" w="full" py="8" alignItems="center">
+            <Box>
+              <Heading as="h1" mb="2">
+                Drop
               </Heading>
-              {drop.items.map((item: any, index: number) => (
-                <Text key={`item-${index}`}>
-                  {item.author ? item.author : "Anonymous"}: {item.message}
-                </Text>
-              ))}
+              <Text as="h2" fontStyle="italic" color="gray.600" size="xs">
+                Dropped on{" "}
+                <FormattedDate value={drop.createdAt} dateStyle="full" />
+              </Text>
             </Box>
+            <Button onClick={handleCopyLink} ml="auto">
+              Copy Link
+            </Button>
           </Card>
+
+          {drop.items.map((item: any, index: number) => (
+            <Card w="full" key={`item-${index}`}>
+              <Text fontSize="xl">{`"${item.message}"`}</Text>
+              <Text
+                fontStyle="italic"
+                color="gray.600"
+                alignSelf="flex-end"
+              >{`- ${item.author ? item.author : "Anonymous"}`}</Text>
+            </Card>
+          ))}
         </VStack>
       </Flex>
       <footer></footer>
