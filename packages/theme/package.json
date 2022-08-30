@@ -25,8 +25,8 @@
     "eslint-config-custom": "*",
     "rimraf": "3.0.2",
     "tsconfig": "*",
+    "tsx": "3.9.0",
     "tsup": "6.2.3",
-    "tsx": "3.8.0",
     "typescript": "4.7.4"
   }
 }
