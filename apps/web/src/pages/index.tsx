@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import api from "../api";
 import { Card } from "../components/card";
 import {
