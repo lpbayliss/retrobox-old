@@ -14,12 +14,19 @@ import MagicLoginStrategy from "passport-magic-login";
 import passport from "passport";
 import expressSession from "express-session";
 import { config } from "dotenv";
+import AWS from "aws-sdk";
 
 config({ path: ".env.local" });
 config({ path: `.env.${process.env.APP_ENV}` });
 if (!process.env.SESSION_SECRET) throw new Error("Session secret required");
 if (!process.env.MAGIC_LINK_SECRET)
   throw new Error("magic link secret required");
+
+AWS.config.update({ region: "ap-southeast-2" });
+
+AWS.config.getCredentials(function (err) {
+  if (err) console.log(err.stack);
+});
 
 declare module "express-session" {
   interface Session {}
@@ -53,8 +60,26 @@ const defaultSessionConfig = {
 const magicLogin = new MagicLoginStrategy({
   secret: process.env.MAGIC_LINK_SECRET!,
   callbackUrl: "/login",
-  sendMagicLink: async (_destination, href) => {
-    console.log(process.env.APP_URL + href);
+  sendMagicLink: async (destination, href) => {
+    var params = {
+      Destination: {
+        ToAddresses: ['success@simulator.amazonses.com'],
+      },
+      Message: {
+        Body: {
+          Text: {
+            Charset: "UTF-8",
+            Data: process.env.APP_URL + href,
+          },
+        },
+        Subject: {
+          Charset: "UTF-8",
+          Data: "Retrobox Magic Link",
+        },
+      },
+      Source: "noreply@retrobox.app",
+    };
+    await new AWS.SES({ apiVersion: "2010-12-01" }).sendEmail(params).promise();
   },
   verify: ({ destination: email }, callback) => {
     const user: Express.User = { id: String(currentId), name: "Test", email };
