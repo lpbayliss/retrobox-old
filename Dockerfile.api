@@ -1,4 +1,5 @@
 FROM node:alpine AS builder
+ENV APP_ENV=production                                                                                                       
 RUN apk update
 # Set working directory
 WORKDIR /app

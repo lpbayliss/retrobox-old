@@ -6,6 +6,10 @@ kill_timeout = 5
 processes = []
 
 [env]
+  NODE_ENV = 'production'
+  APP_URL = 'https://retrobox.app'
+  ALLOWED_ORIGINS = 'https://retrobox.app'
+  PORT = '4000'
 
 [build]
   build-target = "runner"

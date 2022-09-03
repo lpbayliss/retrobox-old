@@ -8,6 +8,7 @@ import express, {
 import helmet from "helmet";
 import cors from "cors";
 import compression from "compression";
+import cookieParser from "cookie-parser";
 import { boxRouter, dropRouter, itemRouter } from "./routes";
 import { getIsDatabaseHealthy } from "./data";
 import MagicLoginStrategy from "passport-magic-login";
@@ -21,9 +22,9 @@ config({ path: `.env.${process.env.APP_ENV}` });
 if (!process.env.SESSION_SECRET) throw new Error("Session secret required");
 if (!process.env.MAGIC_LINK_SECRET)
   throw new Error("magic link secret required");
+if (!process.env.APP_URL) throw new Error("app url required");
 
 AWS.config.update({ region: "ap-southeast-2" });
-
 AWS.config.getCredentials(function (err) {
   if (err) console.log(err.stack);
 });
@@ -50,7 +51,7 @@ const defaultSessionConfig = {
   resave: true,
   saveUninitialized: false,
   cookie: {
-    secure: false,
+    secure: process.env.NODE_ENV === "production" ? true : false,
     httpOnly: true,
     sameSite: true,
     maxAge: 1000 * 60 * 60 * 24 * 7,
@@ -63,7 +64,7 @@ const magicLogin = new MagicLoginStrategy({
   sendMagicLink: async (destination, href) => {
     var params = {
       Destination: {
-        ToAddresses: ['success@simulator.amazonses.com'],
+        ToAddresses: [destination],
       },
       Message: {
         Body: {
@@ -104,13 +105,18 @@ passport.deserializeUser<string>((id, done) => {
 
 const port = parseInt(process.env.PORT!, 10) || 4000;
 
+console.log(process.env.ALLOWED_ORIGINS?.split(","));
 express()
   // Setup middleware
+  .set("trust proxy", 1)
   .use(compression())
   .use(json())
   .use(urlencoded({ extended: true }))
   .use(helmet({ contentSecurityPolicy: false }))
-  .use(cors())
+  .use(
+    cors({ origin: process.env.ALLOWED_ORIGINS?.split(","), credentials: true })
+  )
+  .use(cookieParser())
   .use(expressSession(defaultSessionConfig))
   .use(passport.initialize())
   .use(passport.session())

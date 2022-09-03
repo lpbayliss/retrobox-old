@@ -5,6 +5,8 @@ import { default as createBox } from "./create-box.api";
 import { default as getDrop } from "./get-drop.api";
 import { default as addItem } from "./add-item.api";
 import { default as createDrop } from "./create-drop.api";
+import { default as sendToken } from "./send-token.api";
+import { default as getMe } from "./get-me.api";
 
 export type ResponseData<Body, Meta = {}> = {
   data: Body;
@@ -32,6 +34,7 @@ export type AddItemResponseData = ResponseData<{ id: string }>;
 export const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 1000,
+  withCredentials: true,
 });
 
 const api = {
@@ -40,6 +43,8 @@ const api = {
   getDrop,
   addItem,
   createDrop,
+  sendToken,
+  getMe,
 };
 
 export default api;
