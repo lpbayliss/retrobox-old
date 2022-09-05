@@ -30,7 +30,8 @@
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.6.0",
     "passport-magic-login": "^1.0.9",
-    "redis": "^4.3.0"
+    "redis": "^4.3.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/compression": "^1.7.2",
