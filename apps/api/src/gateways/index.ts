@@ -7,6 +7,7 @@ import { createDropRepository } from "./drop.repository";
 export const boxRepository = createBoxRepository();
 export const itemRepository = createItemRepository();
 export const dropRepository = createDropRepository();
+export { default as userRepository } from './user'
 
 export const getIsDatabaseHealthy = async (): Promise<boolean> => {
   try {

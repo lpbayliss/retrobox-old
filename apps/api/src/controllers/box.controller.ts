@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { boxInteractor } from "../interactors";
+import { boxInteractor } from "../usecases";
 import {
   AddItemToBoxResponse,
   CreateBoxResponse,

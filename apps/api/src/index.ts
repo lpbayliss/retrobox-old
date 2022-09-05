@@ -1,7 +1,12 @@
 import createApp from "./app";
 import { configService } from "./services";
+import { fetchOrCreateUserByEmailUseCase, fetchUserByIdUseCase } from "./usecases";
 
-const app = createApp(configService);
+const app = createApp(
+  configService,
+  fetchOrCreateUserByEmailUseCase,
+  fetchUserByIdUseCase
+);
 
 app.listen(app.get("port"), () => {
   console.log(

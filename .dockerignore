@@ -1,6 +1,6 @@
 README.md
 node_modules
-.env*
+.env.local
 renovate.json
 dist
 .next

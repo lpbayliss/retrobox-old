@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { dropInteractor } from "../interactors";
+import { dropInteractor } from "../usecases";
 import { NotFoundError } from "../lib/errors";
 import { Response } from "../lib/types";
 

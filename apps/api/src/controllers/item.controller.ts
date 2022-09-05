@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { itemInteractor } from "../interactors";
+import { itemInteractor } from "../usecases";
 import { Response } from "../lib/types";
 
 type DeleteItemResponse = Response<null>;

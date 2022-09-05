@@ -21,5 +21,8 @@
   "DROP_CREATED_SUCCESS_TITLE": "Drop Created",
   "DROP_CREATED_SUCCESS_MESSAGE": "We've created a new drop for you",
   "DROP_CREATED_FAILED_TITLE": "Failed to create drop",
-  "DROP_CREATED_FAILED_MESSAGE": "Something went wrong trying to create a drop"
+  "DROP_CREATED_FAILED_MESSAGE": "Something went wrong trying to create a drop",
+  "LOGIN_FORM_PLACEHOLDER": "Enter your email",
+  "LOGIN_FORM_ERROR_REQUIRED": "An email is required",
+  "LOGIN_FORM_ERROR_PATTERN": "Please enter a valid email address"
 }

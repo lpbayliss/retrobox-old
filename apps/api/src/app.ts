@@ -9,13 +9,14 @@ import helmet from "helmet";
 import cors from "cors";
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import { boxRouter, dropRouter, itemRouter } from "./routes";
-import { getIsDatabaseHealthy } from "./data";
+import { boxRouter, dropRouter, itemRouter, userRouter } from "./routes";
+import { getIsDatabaseHealthy } from "./gateways";
 import MagicLoginStrategy from "passport-magic-login";
 import passport from "passport";
 import expressSession from "express-session";
 import AWS from "aws-sdk";
 import { IConfigService } from "./services/config/config.interface";
+import { IFetchOrCreateUserByEmailUseCase, IFetchUserByIdUseCase } from "./usecases/user";
 
 declare module "express-session" {
   interface Session {}
@@ -26,13 +27,10 @@ declare global {
     interface User {
       id: string;
       email: string;
-      name: string | null;
+      nickname: string | null;
     }
   }
 }
-
-let currentId = 0;
-const users: Record<string, Express.User> = {};
 
 const defaultSessionConfig = {
   secret: "secret",
@@ -46,7 +44,11 @@ const defaultSessionConfig = {
   },
 };
 
-const createApp = (configService: IConfigService) => {
+const createApp = (
+  configService: IConfigService,
+  fetchOrCreateUserByEmailUseCase: IFetchOrCreateUserByEmailUseCase,
+  fetchUserByIdUseCase: IFetchUserByIdUseCase
+) => {
   const magicLogin = new MagicLoginStrategy({
     secret: configService.secrets.magicLinkSecret,
     callbackUrl: "/login",
@@ -73,13 +75,10 @@ const createApp = (configService: IConfigService) => {
         .sendEmail(params)
         .promise();
     },
-    verify: ({ destination: email }, callback) => {
-      const user: Express.User = { id: String(currentId), name: "Test", email };
-
-      users[user.id] = user;
-      currentId++;
-
-      callback(undefined, user);
+    verify: async ({ destination: email }, callback) => {
+      const [err, user] = await fetchOrCreateUserByEmailUseCase.execute({ email })
+      if (err) return callback(err)
+      callback(undefined, user)
     },
   });
 
@@ -89,8 +88,9 @@ const createApp = (configService: IConfigService) => {
     done(null, user.id);
   });
 
-  passport.deserializeUser<string>((id, done) => {
-    const user = users[id];
+  passport.deserializeUser<string>(async (id, done) => {
+    const [err, user] = await fetchUserByIdUseCase.execute({ id });
+    if (err) return done(err)
     done(null, user);
   });
 
@@ -150,7 +150,8 @@ const createApp = (configService: IConfigService) => {
     )
     .use(boxRouter)
     .use(itemRouter)
-    .use(dropRouter);
+    .use(dropRouter)
+    .use(userRouter);
 
   return app;
 };

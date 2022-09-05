@@ -1,7 +1,7 @@
 import { createBoxInteractor } from "./box.interactor";
 import { createItemInteractor } from "./item.interactor";
 import { createDropInteractor } from "./drop.interactor";
-import { boxRepository, dropRepository, itemRepository } from "../data";
+import { boxRepository, dropRepository, itemRepository } from "../gateways";
 
 export const boxInteractor = createBoxInteractor(
   boxRepository,
@@ -10,3 +10,5 @@ export const boxInteractor = createBoxInteractor(
 );
 export const itemInteractor = createItemInteractor(itemRepository);
 export const dropInteractor = createDropInteractor(dropRepository);
+
+export { createUserUseCase, fetchUserByIdUseCase, fetchOrCreateUserByEmailUseCase } from "./user";
