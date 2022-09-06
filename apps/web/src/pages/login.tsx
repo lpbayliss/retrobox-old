@@ -15,7 +15,6 @@ import {
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Logo } from "../components/logo";
@@ -41,9 +40,7 @@ const Login: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>
-          Log in
-        </title>
+        <title>Log in</title>
         <meta name="description" content="Log in" />
       </Head>
       <Container as="main" maxW="md" py={{ base: "12", md: "24" }}>
@@ -85,11 +82,7 @@ const Login: NextPage = () => {
                 <FormErrorMessage>
                   {errors.email && errors.email.message}
                 </FormErrorMessage>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  isLoading={isSubmitting}
-                >
+                <Button type="submit" isLoading={isSubmitting}>
                   <FormattedMessage id="LOGIN_FORM_SUBMIT_TEXT" />
                 </Button>
               </Stack>
