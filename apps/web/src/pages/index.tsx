@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormattedMessage } from "react-intl";
+
 import api from "../api";
 import { Card } from "../components/card";
 import {
@@ -38,10 +39,10 @@ const Index: NextPage = () => {
           <Box mx="auto" fontSize="6xl">
             📦
           </Box>
-          <Heading size="4xl" pb="4" mx="auto">
+          <Heading mx="auto" pb="4" size="4xl">
             <FormattedMessage id="RETROBOX" />
           </Heading>
-          <Text mx="auto" maxW="xs" pb="4" color="grey" fontSize="sm">
+          <Text maxW="xs" mx="auto" pb="4" color="grey" fontSize="sm">
             <FormattedMessage id="APP_DESCRIPTION" />
           </Text>
           <CreateBoxForm mx="auto" minW="xs" onSubmit={handleOnSubmit} />

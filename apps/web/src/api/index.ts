@@ -1,12 +1,13 @@
 import axios from "axios";
 
-import { default as getBox } from "./get-box.api";
-import { default as createBox } from "./create-box.api";
-import { default as getDrop } from "./get-drop.api";
 import { default as addItem } from "./add-item.api";
+import { default as createBox } from "./create-box.api";
 import { default as createDrop } from "./create-drop.api";
-import { default as sendToken } from "./send-token.api";
+import { default as getBox } from "./get-box.api";
+import { default as getDrop } from "./get-drop.api";
 import { default as getMe } from "./get-me.api";
+import { default as requestMagicLink } from "./request-magic-link.api";
+import { default as sendToken } from "./send-token.api";
 
 export type ResponseData<Body, Meta = {}> = {
   data: Body;
@@ -45,6 +46,7 @@ const api = {
   createDrop,
   sendToken,
   getMe,
+  requestMagicLink
 };
 
 export default api;

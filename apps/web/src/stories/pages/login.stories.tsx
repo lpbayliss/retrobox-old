@@ -1,5 +1,5 @@
+import { ComponentMeta,ComponentStory } from "@storybook/react";
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { default as Login } from "../../pages/login";
 
@@ -13,3 +13,4 @@ const Template: ComponentStory<typeof Login> = (args) => <Login {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {};
+

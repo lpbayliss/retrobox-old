@@ -8,9 +8,9 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { FormattedMessage, useIntl } from "react-intl";
 import { useEffect } from "react";
+import { SubmitHandler,useForm } from "react-hook-form";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export type ICreateItemFormInputs = {
   author: string;
@@ -45,9 +45,9 @@ const CreateItemForm = ({ onSubmit }: Props) => {
           <FormattedMessage id="CREATE_ITEM_NAME_LABEL" />
         </FormLabel>
         <Input
-          variant="filled"
           id="author"
           placeholder="Luke Skywalker"
+          variant="filled"
           {...register("author")}
         />
         <FormHelperText>
@@ -63,9 +63,9 @@ const CreateItemForm = ({ onSubmit }: Props) => {
           <FormattedMessage id="CREATE_ITEM_RETRO_ITEM_LABEL" />
         </FormLabel>
         <Input
-          variant="filled"
           id="message"
           placeholder="There isn't enough blue milk"
+          variant="filled"
           {...register("message", {
             required: intl.formatMessage({
               id: "CREATE_ITEM_NAME_NO_CONTENT_ERROR",
@@ -81,7 +81,7 @@ const CreateItemForm = ({ onSubmit }: Props) => {
         </FormErrorMessage>
       </FormControl>
       <Divider />
-      <Button type="submit" w="full" isLoading={isSubmitting}>
+      <Button w="full" isLoading={isSubmitting} type="submit">
         <FormattedMessage id="CREATE_ITEM_SUBMIT_LABEL" />
       </Button>
     </VStack>

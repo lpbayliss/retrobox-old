@@ -26,8 +26,13 @@
   "LOGIN_FORM_ERROR_REQUIRED": "An email is required",
   "LOGIN_FORM_ERROR_PATTERN": "Please enter a valid email address",
   "LOGIN_FORM_SUBMIT_TEXT": "Continue with email",
+  "LOGIN_FORM_ON_SUCCESS_TITLE": "Email sent!",
+  "LOGIN_FORM_ON_SUCCESS_MESSAGE": "We've sent a magic link to {email}",
+  "LOGIN_FORM_ON_ERROR_TITLE": "Continue with email",
+  "LOGIN_FORM_ON_ERROR_MESSAGE": "Continue with email",
   "LOGIN_PAGE_ISSUES": "Having issues?",
   "LOGIN_PAGE_CONTACT": "Contact support",
   "LOGIN_PAGE_FORM_TITLE": "Log in or create a new account",
-  "LOGIN_PAGE_FORM_SUBTITLE": "Get started!"
+  "LOGIN_PAGE_FORM_SUBTITLE": "Get started!",
+  "LOGIN_PAGE_LOGIN_ERROR": "Oops! We couldn't log you in, try sending another magic link"
 }

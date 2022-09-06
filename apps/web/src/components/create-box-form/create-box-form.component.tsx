@@ -9,7 +9,7 @@ import {
   StackProps,
   VStack,
 } from "@chakra-ui/react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { SubmitHandler,useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 export type ICreateBoxFormInputs = {
@@ -39,9 +39,9 @@ const CreateBoxForm = ({ onSubmit, ...props }: Props & Omit<StackProps, 'onSubmi
           <FormattedMessage id="CREATE_BOX_LABEL" />
         </FormLabel>
         <Input
-          variant="filled"
           id="name"
           placeholder={intl.formatMessage({ id: "CREATE_BOX_PLACEHOLDER" })}
+          variant="filled"
           {...register("name", {
             required: intl.formatMessage({ id: "CREATE_BOX_ERROR_REQUIRED" }),
             minLength: {
@@ -60,7 +60,7 @@ const CreateBoxForm = ({ onSubmit, ...props }: Props & Omit<StackProps, 'onSubmi
         </FormErrorMessage>
       </FormControl>
       <Divider/>
-      <Button type="submit" isLoading={isSubmitting} w="full">
+      <Button w="full" isLoading={isSubmitting} type="submit">
         <FormattedMessage id="CREATE_BOX_BUTTON" />
       </Button>
     </VStack>

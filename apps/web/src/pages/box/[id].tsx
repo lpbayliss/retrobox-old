@@ -23,6 +23,7 @@ import Head from "next/head";
 import { default as NextLink } from "next/link";
 import { useRouter } from "next/router";
 import { FormattedDate, useIntl } from "react-intl";
+
 import api from "../../api";
 import { Card } from "../../components/card";
 import CreateItemForm, {
@@ -133,16 +134,16 @@ const BoxPage: NextPage<Props> = (props) => {
           {/* TITLE */}
           <Card flexDir="row" w="full" py="8">
             <Heading as="h1">{box.name}</Heading>
-            <Button onClick={handleCopyLink} ml="auto">
+            <Button ml="auto" onClick={handleCopyLink}>
               Copy Link
             </Button>
           </Card>
 
-          <Flex flexDir={["column", null, null, "row"]} gap="4">
+          <Flex direction={["column", null, null, "row"]} gap="4">
             {/* ITEMS */}
             <Card w="full" py="6" gap="8">
               <Box w="sm" mx="auto">
-                <Heading as="h2" size="lg" mb="3">
+                <Heading as="h2" mb="3" size="lg">
                   Box
                 </Heading>
                 <Text color="grey" fontSize="sm">
@@ -150,7 +151,7 @@ const BoxPage: NextPage<Props> = (props) => {
                 </Text>
               </Box>
               <Box w="sm" mx="auto">
-                <Heading as="h3" size="md" mb="3">
+                <Heading as="h3" mb="3" size="md">
                   Add Item
                 </Heading>
                 <CreateItemForm onSubmit={handleOnSubmit} />
@@ -159,23 +160,23 @@ const BoxPage: NextPage<Props> = (props) => {
 
             {/* DROPS */}
             <Card w="full" py="6" gap="8">
-              <VStack w="sm" mx="auto" gap="1" align="start">
+              <VStack align="start" gap="1" w="sm" mx="auto">
                 <Tooltip
-                  bg="gray.700"
                   p="3"
-                  hasArrow
-                  placement="right"
-                  label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
+                  bg="gray.700"
                   aria-label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
+                  hasArrow
+                  label={intl.formatMessage({ id: "BOX_EXPLANATION" })}
+                  placement="right"
                 >
-                  <Heading as="h2" size="lg" mb="3">
+                  <Heading as="h2" mb="3" size="lg">
                     Drops
                   </Heading>
                 </Tooltip>
 
                 {box.latestDrop && (
                   <>
-                    <Heading as="h3" size="md" mb="3">
+                    <Heading as="h3" mb="3" size="md">
                       Most Recent
                     </Heading>
                     <Text>
@@ -201,16 +202,16 @@ const BoxPage: NextPage<Props> = (props) => {
                   <Text>There are no items to drop, add some?</Text>
                 )}
                 <Button
+                  w="full"
+                  isDisabled={!box.itemCount}
                   isLoading={createDropMutation.isLoading}
                   onClick={handleCreateDrop}
-                  isDisabled={!box.itemCount}
-                  w="full"
                 >
                   Create Drop
                 </Button>
               </VStack>
               <Box w="sm" mx="auto">
-                <Heading as="h2" size="md" mb="3">
+                <Heading as="h2" mb="3" size="md">
                   All Drops
                 </Heading>
                 {!!box.allDrops.length && (

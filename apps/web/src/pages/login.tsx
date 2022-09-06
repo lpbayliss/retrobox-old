@@ -2,7 +2,6 @@ import {
   Button,
   Container,
   Divider,
-  Flex,
   FormControl,
   FormErrorMessage,
   Heading,
@@ -11,21 +10,42 @@ import {
   Stack,
   Text,
   useBreakpointValue,
+  useToast,
 } from "@chakra-ui/react";
-import type { NextPage } from "next";
+import { useMutation } from "@tanstack/react-query";
+import to from "await-to-js";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
+
+import api from "../api";
 import { Logo } from "../components/logo";
 
 export type ILoginFormInputs = {
   email: string;
 };
 
-const Login: NextPage = () => {
+interface LoginProps {
+  error: boolean;
+}
+
+export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
+  query,
+  res,
+}) => {
+  if (!query.token) return { props: { error: false } };
+
+  const [err, response] = await to(api.sendToken(String(query.token)));
+  if (err) return { props: { error: true } };
+
+  res.setHeader("set-cookie", String(response?.headers["set-cookie"]));
+  return { redirect: { destination: "/" }, props: { error: false } };
+};
+
+const Login: NextPage<LoginProps> = ({ error }) => {
   const intl = useIntl();
-  const router = useRouter();
+  const toast = useToast();
 
   const {
     register,
@@ -33,39 +53,81 @@ const Login: NextPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<ILoginFormInputs>();
 
-  const handleOnSubmit: SubmitHandler<ILoginFormInputs> = (data) => {
-    console.log(data);
+  const requestMagicLinkMutation = useMutation(
+    (payload: { destination: string }) => {
+      return api.requestMagicLink(payload.destination);
+    }
+  );
+
+  const handleOnSubmit: SubmitHandler<ILoginFormInputs> = ({ email }) => {
+    requestMagicLinkMutation.mutate(
+      { destination: email },
+      {
+        onSuccess: () => {
+          toast({
+            title: intl.formatMessage({ id: "LOGIN_FORM_ON_SUCCESS_TITLE" }),
+            description: intl.formatMessage(
+              {
+                id: "LOGIN_FORM_ON_SUCCESS_MESSAGE",
+              },
+              { email }
+            ),
+            status: "info",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-left",
+          });
+        },
+        onError: () => {
+          toast({
+            title: intl.formatMessage({ id: "LOGIN_FORM_ON_ERROR_TITLE" }),
+            description: intl.formatMessage({
+              id: "LOGIN_FORM_ON_ERROR_MESSAGE",
+            }),
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-left",
+          });
+        },
+      }
+    );
   };
 
   return (
     <div>
       <Head>
-        <title>Log in</title>
+        <title>Retrobox | Log in</title>
         <meta name="description" content="Log in" />
       </Head>
       <Container as="main" maxW="md" py={{ base: "12", md: "24" }}>
         <Stack spacing="8">
           <Stack spacing="6">
             <Logo />
-            <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
+            <Stack textAlign="center" spacing={{ base: "2", md: "3" }}>
               <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>
                 <FormattedMessage id="LOGIN_PAGE_FORM_TITLE" />
               </Heading>
-              <Text color="muted">
+              <Text>
                 <FormattedMessage id="LOGIN_PAGE_FORM_SUBTITLE" />
               </Text>
+              {error && (
+                <Text color="red.300" fontSize="sm">
+                  <FormattedMessage id="LOGIN_PAGE_LOGIN_ERROR" />
+                </Text>
+              )}
             </Stack>
           </Stack>
 
-          <Stack as="form" spacing="6" onSubmit={handleSubmit(handleOnSubmit)}>
+          <Stack as="form" onSubmit={handleSubmit(handleOnSubmit)} spacing="6">
             <FormControl isInvalid={!!errors.email}>
               <Stack spacing="4">
                 <Input
-                  variant="filled"
                   id="email"
                   placeholder={intl.formatMessage({
                     id: "LOGIN_FORM_PLACEHOLDER",
                   })}
+                  variant="filled"
                   {...register("email", {
                     required: intl.formatMessage({
                       id: "LOGIN_FORM_ERROR_REQUIRED",
@@ -82,7 +144,7 @@ const Login: NextPage = () => {
                 <FormErrorMessage>
                   {errors.email && errors.email.message}
                 </FormErrorMessage>
-                <Button type="submit" isLoading={isSubmitting}>
+                <Button isLoading={isSubmitting} type="submit">
                   <FormattedMessage id="LOGIN_FORM_SUBMIT_TEXT" />
                 </Button>
               </Stack>
@@ -91,11 +153,11 @@ const Login: NextPage = () => {
 
           <Divider />
 
-          <HStack spacing="1" justify="center">
-            <Text fontSize="sm" color="muted">
+          <HStack justify="center" spacing="1">
+            <Text color="muted" fontSize="sm">
               <FormattedMessage id="LOGIN_PAGE_ISSUES" />
             </Text>
-            <Button variant="link" colorScheme="blue" size="sm">
+            <Button colorScheme="blue" size="sm" variant="link">
               <FormattedMessage id="LOGIN_PAGE_CONTACT" />
             </Button>
           </HStack>

@@ -1,15 +1,15 @@
 import { ChakraProvider } from "@chakra-ui/react";
+import theme from "@retrobox/theme";
 import {
   Hydrate,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
-
-import theme from "@retrobox/theme";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { IntlProvider } from "react-intl";
-import { useRouter } from "next/router";
+
 import { getMessages } from "../i18n";
 
 function MyApp({ Component, pageProps }: AppProps) {

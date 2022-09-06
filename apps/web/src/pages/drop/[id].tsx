@@ -4,6 +4,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormattedDate } from "react-intl";
+
 import api, { FetchDropResponseData } from "../../api";
 import { Card } from "../../components/card";
 
@@ -46,9 +47,9 @@ const DropPage: NextPage<Props> = (props) => {
       </Head>
       <Flex as="main" h="100vh">
         <VStack
+          minW={["sm", null, "2xl"]}
           mx="auto"
           my="auto"
-          minW={["sm", null, "2xl"]}
           spacing="4"
         >
           <Card flexDir="row" w="full" py="8" alignItems="center">
@@ -56,12 +57,12 @@ const DropPage: NextPage<Props> = (props) => {
               <Heading as="h1" mb="2">
                 Drop
               </Heading>
-              <Text as="h2" fontStyle="italic" color="gray.600" size="xs">
+              <Text as="h2" color="gray.600" fontStyle="italic" size="xs">
                 Dropped on{" "}
                 <FormattedDate value={drop.createdAt} dateStyle="full" />
               </Text>
             </Box>
-            <Button onClick={handleCopyLink} ml="auto">
+            <Button ml="auto" onClick={handleCopyLink}>
               Copy Link
             </Button>
           </Card>
@@ -70,9 +71,9 @@ const DropPage: NextPage<Props> = (props) => {
             <Card w="full" key={`item-${index}`}>
               <Text fontSize="xl">{`"${item.message}"`}</Text>
               <Text
-                fontStyle="italic"
-                color="gray.600"
                 alignSelf="flex-end"
+                color="gray.600"
+                fontStyle="italic"
               >{`- ${item.author ? item.author : "Anonymous"}`}</Text>
             </Card>
           ))}
