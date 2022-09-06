@@ -21,6 +21,7 @@
     "@retrobox/ui": "*",
     "@tanstack/react-query": "4.2.3",
     "@typescript-eslint/parser": "^5.36.2",
+    "await-to-js": "^3.0.0",
     "axios": "^0.27.2",
     "eslint-plugin-chakra-ui": "^0.7.2",
     "framer-motion": "7.2.1",
