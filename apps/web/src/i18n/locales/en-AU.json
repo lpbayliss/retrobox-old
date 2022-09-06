@@ -24,5 +24,10 @@
   "DROP_CREATED_FAILED_MESSAGE": "Something went wrong trying to create a drop",
   "LOGIN_FORM_PLACEHOLDER": "Enter your email",
   "LOGIN_FORM_ERROR_REQUIRED": "An email is required",
-  "LOGIN_FORM_ERROR_PATTERN": "Please enter a valid email address"
+  "LOGIN_FORM_ERROR_PATTERN": "Please enter a valid email address",
+  "LOGIN_FORM_SUBMIT_TEXT": "Continue with email",
+  "LOGIN_PAGE_ISSUES": "Having issues?",
+  "LOGIN_PAGE_CONTACT": "Contact support",
+  "LOGIN_PAGE_FORM_TITLE": "Log in or create a new account",
+  "LOGIN_PAGE_FORM_SUBTITLE": "Get started!"
 }

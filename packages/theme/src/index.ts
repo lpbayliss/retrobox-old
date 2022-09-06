@@ -6,13 +6,10 @@ import Card from "./components/card";
 // import Heading from "./components/heading";
 
 const overrides: ThemeOverride = {
-  
   styles,
   semanticTokens,
   components: {
-    // Section,
     Card,
-    // Heading,
   },
 };
 

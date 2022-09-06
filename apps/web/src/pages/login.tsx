@@ -17,7 +17,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Logo } from "../components/logo";
 
 export type ILoginFormInputs = {
@@ -41,7 +41,9 @@ const Login: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Log in</title>
+        <title>
+          Log in
+        </title>
         <meta name="description" content="Log in" />
       </Head>
       <Container as="main" maxW="md" py={{ base: "12", md: "24" }}>
@@ -50,9 +52,11 @@ const Login: NextPage = () => {
             <Logo />
             <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
               <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>
-                Log in or create a new account
+                <FormattedMessage id="LOGIN_PAGE_FORM_TITLE" />
               </Heading>
-              <Text color="muted">Get started!</Text>
+              <Text color="muted">
+                <FormattedMessage id="LOGIN_PAGE_FORM_SUBTITLE" />
+              </Text>
             </Stack>
           </Stack>
 
@@ -78,13 +82,15 @@ const Login: NextPage = () => {
                     },
                   })}
                 />
-                <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+                <FormErrorMessage>
+                  {errors.email && errors.email.message}
+                </FormErrorMessage>
                 <Button
                   type="submit"
                   variant="primary"
                   isLoading={isSubmitting}
                 >
-                  Continue with email
+                  <FormattedMessage id="LOGIN_FORM_SUBMIT_TEXT" />
                 </Button>
               </Stack>
             </FormControl>
@@ -94,10 +100,10 @@ const Login: NextPage = () => {
 
           <HStack spacing="1" justify="center">
             <Text fontSize="sm" color="muted">
-              Having issues?
+              <FormattedMessage id="LOGIN_PAGE_ISSUES" />
             </Text>
             <Button variant="link" colorScheme="blue" size="sm">
-              Contact support
+              <FormattedMessage id="LOGIN_PAGE_CONTACT" />
             </Button>
           </HStack>
         </Stack>
