@@ -123,23 +123,35 @@ export const createDrop: RequestFunc<{ boxId: string }, CreateResult> = async (
   return res.data.data;
 };
 
-export const getMe: RequestFunc<{}, { id: string; email: string; nickname?: string }> =
-  async (_input, headers) => {
-    const [err, res] = await to(
-      client.get(`/me`, {
-        ...(headers && { headers: { cookie: String(headers.cookie) } }),
-      })
-    );
-    if (err || !res.data) return null;
-    return res.data.data;
-  };
+export const getMe: RequestFunc<
+  {},
+  { id: string; email: string; nickname?: string }
+> = async (_input, headers) => {
+  const [err, res] = await to(
+    client.get(`/me`, {
+      ...(headers && { headers: { cookie: String(headers.cookie) } }),
+    })
+  );
+  if (err || !res.data) return null;
+  return res.data.data;
+};
 
 async (token: string) => (await client.get(`/me`)).data;
 
-export const requestMagicLink: RequestFunc<{ destination: string }, null> =
-  async ({ destination }) =>
-    (await client.post(`/auth/login`, { destination })).data;
+export const requestMagicLink: RequestFunc<
+  { destination: string },
+  null
+> = async ({ destination }) =>
+  (await client.post(`/auth/login`, { destination })).data;
 
-export const sendToken: RequestFunc<{ boxId: string }, null> = async (
-  token: string
-) => await client.get(`/auth/login/callback`, { params: { token } });
+export const sendToken: RequestFunc<
+  { token: string },
+  { setCookie: string[] }
+> = async ({ token }) => {
+  const [err, res] = await to(
+    client.get(`/auth/login/callback`, { params: { token } })
+  );
+  if (err) return null;
+  const setCookie = res?.headers["set-cookie"] || [];
+  return { setCookie };
+};
