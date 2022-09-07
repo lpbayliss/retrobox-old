@@ -5,33 +5,28 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormattedDate } from "react-intl";
 
-import api, { FetchDropResponseData } from "../../api";
+import { Drop, getDrop } from "../../api";
 import { Card } from "../../components/card";
 
 type Props = {
-  dropId: string;
-  dropData: {
-    id: string;
-    createdAt: Date;
-    items: { message: string; author: string | null }[];
-  };
+  drop: Drop | null;
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { data } = await api.getDrop(context.params!.id as string);
-  return { props: { dropId: context.params!.id as string, dropData: data } };
+  const drop = await getDrop({ dropId: String(context.params!.id) });
+  return { props: { drop } };
 };
 
 const DropPage: NextPage<Props> = (props) => {
   const { asPath } = useRouter();
 
   const { data: drop } = useQuery(
-    ["drop", props.dropId],
-    async () => (await api.getDrop(props.dropId)).data,
+    ["drop", props.drop!.id],
+    async () => await getDrop({ dropId: props.drop!.id }),
     {
-      initialData: props.dropData,
+      initialData: props.drop!,
     }
   );
 
@@ -46,20 +41,15 @@ const DropPage: NextPage<Props> = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Flex as="main" h="100vh">
-        <VStack
-          minW={["sm", null, "2xl"]}
-          mx="auto"
-          my="auto"
-          spacing="4"
-        >
+        <VStack minW={["sm", null, "2xl"]} mx="auto" my="auto" spacing="4">
           <Card flexDir="row" w="full" py="8" alignItems="center">
             <Box>
               <Heading as="h1" mb="2">
                 Drop
               </Heading>
               <Text as="h2" color="gray.600" fontStyle="italic" size="xs">
-                Dropped on{" "}
-                <FormattedDate value={drop.createdAt} dateStyle="full" />
+                Dropped on
+                <FormattedDate value={drop!.createdAt} dateStyle="full" />
               </Text>
             </Box>
             <Button ml="auto" onClick={handleCopyLink}>
@@ -67,16 +57,17 @@ const DropPage: NextPage<Props> = (props) => {
             </Button>
           </Card>
 
-          {drop.items.map((item: any, index: number) => (
-            <Card w="full" key={`item-${index}`}>
-              <Text fontSize="xl">{`"${item.message}"`}</Text>
-              <Text
-                alignSelf="flex-end"
-                color="gray.600"
-                fontStyle="italic"
-              >{`- ${item.author ? item.author : "Anonymous"}`}</Text>
-            </Card>
-          ))}
+          {drop &&
+            drop.items.map((item: any, index: number) => (
+              <Card w="full" key={`item-${index}`}>
+                <Text fontSize="xl">{`"${item.message}"`}</Text>
+                <Text
+                  alignSelf="flex-end"
+                  color="gray.600"
+                  fontStyle="italic"
+                >{`- ${item.author ? item.author : "Anonymous"}`}</Text>
+              </Card>
+            ))}
         </VStack>
       </Flex>
       <footer></footer>

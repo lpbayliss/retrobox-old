@@ -9,14 +9,6 @@ export const createUserController = (
   fetchUserByIdUseCase: IFetchUserByIdUseCase
 ) => {
   const fetchMe = async (req: Request, res: FetchMeResponse) => {
-    if (req.isUnauthenticated())
-      return res.status(401).send({
-        title: "https://retrobox.app/probs/not-authenticated",
-        status: 401,
-        detail: "Could not authenticate this request",
-        instance: req.originalUrl,
-      });
-
     const [err, user] = await fetchUserByIdUseCase.execute({
       id: req.user!.id,
     });
