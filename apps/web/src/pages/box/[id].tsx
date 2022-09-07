@@ -32,11 +32,12 @@ import CreateItemForm, {
 
 type Props = { boxId: string; boxData: any };
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
-) => {
-  const boxData = (await api.getBox(context.params!.id as string)).data;
-  return { props: { boxId: context.params!.id as string, boxData } };
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+  req,
+}) => {
+  const boxData = await api.getBox(String(params!.id), req.headers);
+  return { props: { boxId: params!.id as string, boxData } };
 };
 
 const BoxPage: NextPage<Props> = (props) => {
@@ -47,7 +48,7 @@ const BoxPage: NextPage<Props> = (props) => {
 
   const { data: box } = useQuery(
     ["box", props.boxId],
-    async () => (await api.getBox(props.boxId)).data,
+    async () => (await api.getBox(props.boxId)),
     {
       initialData: props.boxData,
     }
