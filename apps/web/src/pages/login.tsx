@@ -12,13 +12,13 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
+import { requestMagicLink, sendToken } from "@retrobox/api";
 import { useMutation } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { requestMagicLink, sendToken } from "../api";
 import { Logo } from "../components/logo";
 
 export type ILoginFormInputs = {

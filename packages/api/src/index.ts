@@ -2,9 +2,10 @@ import to from "await-to-js";
 import axios from "axios";
 import { IncomingHttpHeaders } from "http";
 
+import { Nullable } from "@retrobox/types/dist/util";
+
 // TYPES
 
-export type Nullable<T> = T | null;
 export type RequestFunc<Input = {}, Output = {}> = (
   input: Input,
   headers?: IncomingHttpHeaders
@@ -37,6 +38,12 @@ export type FetchDropResponseData = ResponseData<Drop>;
 export type AddItemResponseData = ResponseData<CreateResult>;
 
 // CLIENT
+
+export const ssrClient = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  timeout: 1000,
+  withCredentials: true,
+});
 
 export const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,

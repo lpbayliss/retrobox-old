@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import { Drop, getDrop } from "@retrobox/api";
 import { useQuery } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormattedDate } from "react-intl";
 
-import { Drop, getDrop } from "../../api";
 import { Card } from "../../components/card";
 
 type Props = {

@@ -1,11 +1,11 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react/dist/";
+import { createBox } from "@retrobox/api";
 import { useMutation } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormattedMessage } from "react-intl";
 
-import { createBox } from "../api";
 import { Card } from "../components/card";
 import {
   CreateBoxForm,

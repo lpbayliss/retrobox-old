@@ -19,6 +19,8 @@
     "@emotion/styled": "^11.9.3",
     "@retrobox/theme": "*",
     "@retrobox/ui": "*",
+    "@retrobox/api": "*",
+    "@retrobox/types": "*",
     "@tanstack/react-query": "4.2.3",
     "@typescript-eslint/parser": "^5.36.2",
     "await-to-js": "^3.0.0",
