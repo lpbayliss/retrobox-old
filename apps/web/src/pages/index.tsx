@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react/dist/";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react/";
 import { createBox } from "@retrobox/api";
 import { useMutation } from "@tanstack/react-query";
 import type { NextPage } from "next";
@@ -16,13 +16,13 @@ const Index: NextPage = () => {
   const router = useRouter();
 
   const mutation = useMutation((input: { name: string }) => {
-    return createBox({ name: input.name });
+    return createBox(input.name);
   });
 
   const handleOnSubmit = async (input: ICreateBoxFormInputs) => {
     mutation.mutate(input, {
-      onSuccess: (data) => {
-        router.push(`/box/${data!.id}`);
+      onSuccess: ({ data }) => {
+        router.push(`/box/${data.id}`);
       },
     });
   };

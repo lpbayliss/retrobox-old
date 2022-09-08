@@ -1,76 +1,79 @@
-import { Request } from "express";
-import { boxInteractor } from "../usecases";
-import {
-  AddItemToBoxResponse,
-  CreateBoxResponse,
-  CreateDropFromBoxResponse,
-  FetchBoxResponse,
-} from "../lib/types";
+import { Request, Response } from "express";
+import { AddItemResponse, CreateBoxResponse, CreateDropResponse, FetchBoxResponse, ProblemJson } from "@retrobox/types"
+import { addItemToBoxUseCase, createBoxUseCase, createDropFromBoxUseCase, fetchBoxUseCase } from "../usecases";
 
-export const createBoxController = () => ({
-  createBox: async (req: Request, res: CreateBoxResponse) => {
-    const [err, boxId] = await boxInteractor.createNewBox(req.body.name);
+const createBox = async (req: Request, res: Response<CreateBoxResponse | ProblemJson>) => {
+  const [err, box] = await createBoxUseCase.execute(req.body.name);
 
-    if (err)
-      return res.status(400).send({
-        title: "https://retrobox.app/probs/couldnt-create-box",
-        status: 400,
-        detail: "Something went wrong while creating a box",
+  if (err)
+    return res.status(400).send({
+      title: "https://retrobox.app/probs/couldnt-create-box",
+      status: 400,
+      detail: "Something went wrong while creating a box",
+      instance: req.originalUrl,
+    });
+
+  return res.status(201).send({ data: box, meta: null });
+};
+
+const fetchBox = async (req: Request, res: Response<FetchBoxResponse | ProblemJson>) => {
+  const [err, box] = await fetchBoxUseCase.execute(req.params.id);
+
+  if (err) {
+    if ((err.name === "NotFoundError"))
+      return res.status(404).send({
+        title: "https://retrobox.app/probs/box-not-found",
+        status: 404,
+        detail: err.message,
         instance: req.originalUrl,
       });
-
-    return res.status(201).send({ data: { id: boxId }, meta: null });
-  },
-  fetchBox: async (req: Request, res: FetchBoxResponse) => {
-    const [err, box] = await boxInteractor.fetchBox(req.params.id);
-
-    if (err) {
-      if ((err.name = "NotFoundError"))
-        return res.status(404).send({
-          title: "https://retrobox.app/probs/couldnt-fetch-box",
-          status: 404,
-          detail: err.message,
-          instance: req.originalUrl,
-        });
-      else
-        return res.status(400).send({
-          title: "https://retrobox.app/probs/couldnt-fetch-box",
-          status: 400,
-          detail: err.message,
-          instance: req.originalUrl,
-        });
-    }
-
-    return res.status(200).send({ data: box, meta: null });
-  },
-  addItem: async (req: Request, res: AddItemToBoxResponse) => {
-    const [err, itemId] = await boxInteractor.addItemToBox(
-      req.params.id,
-      req.body.message,
-      req.body.author
-    );
-
-    if (err)
+    else
       return res.status(400).send({
-        title: "https://retrobox.app/probs/couldnt-add-item",
-        status: 400,
-        detail: "Something went wrong while adding an item to a box",
-        instance: req.originalUrl,
-      });
-
-    return res.status(201).send({ data: { id: itemId }, meta: null });
-  },
-  createDrop: async (req: Request, res: CreateDropFromBoxResponse) => {
-    const [err, dropId] = await boxInteractor.createDropFromBox(req.params.id);
-
-    if (err)
-      return res.status(400).send({
-        title: "https://retrobox.app/probs/couldnt-create-drop",
+        title: "https://retrobox.app/probs/internal-error",
         status: 400,
         detail: err.message,
         instance: req.originalUrl,
       });
+  }
 
-    return res.status(201).send({ data: { id: dropId }, meta: null });
-  },
-});
+  return res.status(200).send({ data: box, meta: null });
+};
+
+const addItem = async (req: Request, res: Response<AddItemResponse | ProblemJson>) => {
+  const [err, item] = await addItemToBoxUseCase.execute(
+    req.params.id,
+    req.body.message,
+    req.body.author
+  );
+
+  if (err)
+    return res.status(400).send({
+      title: "https://retrobox.app/probs/couldnt-add-item",
+      status: 400,
+      detail: "Something went wrong while adding an item to a box",
+      instance: req.originalUrl,
+    });
+
+  return res.status(201).send({ data: item, meta: null });
+};
+
+const createDrop = async (req: Request, res: Response<CreateDropResponse | ProblemJson>) => {
+  const [err, drop] = await createDropFromBoxUseCase.execute(req.params.id);
+
+  if (err)
+    return res.status(400).send({
+      title: "https://retrobox.app/probs/couldnt-create-drop",
+      status: 400,
+      detail: err.message,
+      instance: req.originalUrl,
+    });
+
+  return res.status(201).send({ data: drop, meta: null });
+};
+
+export default {
+  createBox,
+  fetchBox,
+  addItem,
+  createDrop
+}

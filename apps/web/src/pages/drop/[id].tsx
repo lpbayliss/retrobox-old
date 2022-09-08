@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
-import { Drop, getDrop } from "@retrobox/api";
+import { getDrop } from "@retrobox/api";
+import { FetchDropResponse } from "@retrobox/types";
 import { useQuery } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
@@ -9,24 +10,24 @@ import { FormattedDate } from "react-intl";
 import { Card } from "../../components/card";
 
 type Props = {
-  drop: Drop | null;
+  initialDropData: FetchDropResponse;
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const drop = await getDrop({ dropId: String(context.params!.id) });
-  return { props: { drop } };
+  const data = await getDrop(String(context.params!.id));
+  return { props: { initialDropData: data  } };
 };
 
 const DropPage: NextPage<Props> = (props) => {
   const { asPath } = useRouter();
 
-  const { data: drop } = useQuery(
-    ["drop", props.drop!.id],
-    async () => await getDrop({ dropId: props.drop!.id }),
+  const { data: { data: drop } } = useQuery(
+    ["drop", props.initialDropData.data.id],
+    async () => await getDrop(props.initialDropData.data.id),
     {
-      initialData: props.drop!,
+      initialData: props.initialDropData,
     }
   );
 
@@ -49,7 +50,7 @@ const DropPage: NextPage<Props> = (props) => {
               </Heading>
               <Text as="h2" color="gray.600" fontStyle="italic" size="xs">
                 Dropped on
-                <FormattedDate value={drop!.createdAt} dateStyle="full" />
+                <FormattedDate value={drop.createdAt} dateStyle="full" />
               </Text>
             </Box>
             <Button ml="auto" onClick={handleCopyLink}>

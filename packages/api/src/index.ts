@@ -1,107 +1,54 @@
 import to from "await-to-js";
-import axios from "axios";
+import { client } from "./client";
+import { AddItemResponse, CreateBoxResponse, CreateDropResponse, FetchBoxResponse, FetchDropResponse, FetchUserResponse, ProblemJson } from "@retrobox/types";
 import { IncomingHttpHeaders } from "http";
 
-import { Nullable } from "@retrobox/types/dist/util";
-
-// TYPES
-
-export type RequestFunc<Input = {}, Output = {}> = (
-  input: Input,
+export const fetchBox = async (
+  id: string,
   headers?: IncomingHttpHeaders
-) => Promise<Nullable<Output>>;
-
-export type ResponseData<Body, Meta = {}> = {
-  data: Body;
-  meta: Meta;
-};
-
-export type CreateResult = { id: string };
-export type Drop = {
-  id: string;
-  itemCount: number;
-  createdAt: Date;
-  items: [];
-};
-export type Item = { message: string; author: string | null };
-export type Box = {
-  id: string;
-  name: string;
-  itemCount: number;
-  latestDrop: Omit<Drop, "items">;
-  allDrops: Omit<Drop, "items">[];
-};
-export type CreateBoxResponseData = ResponseData<CreateResult>;
-export type CreateDropResponseData = ResponseData<CreateResult>;
-export type FetchBoxResponseData = ResponseData<Box>;
-export type FetchDropResponseData = ResponseData<Drop>;
-export type AddItemResponseData = ResponseData<CreateResult>;
-
-// CLIENT
-
-export const ssrClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 1000,
-  withCredentials: true,
-});
-
-export const client = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 1000,
-  withCredentials: true,
-});
-
-// REQUESTS
-
-export const getBox: RequestFunc<{ boxId: string }, Box> = async (
-  { boxId },
-  headers
-) => {
+): Promise<FetchBoxResponse> => {
   const [err, res] = await to(
-    client.get<FetchBoxResponseData>(`/boxes/${boxId}`, {
+    client.get<FetchBoxResponse>(`/boxes/${id}`, {
       ...(headers && { headers: { cookie: String(headers.cookie) } }),
     })
   );
-  if (err || !res.data) return null;
-  return res.data.data;
+  if (err) throw err;
+  return res.data;
 };
 
-export const getDrop: RequestFunc<{ dropId: string }, Drop> = async (
-  { dropId },
-  headers
-) => {
+export const getDrop = async (
+  id: string,
+  headers?: IncomingHttpHeaders
+): Promise<FetchDropResponse> => {
   const [err, res] = await to(
-    client.get<FetchDropResponseData>(`/drops/${dropId}`, {
+    client.get<FetchDropResponse>(`/drops/${id}`, {
       ...(headers && { headers: { cookie: String(headers.cookie) } }),
     })
   );
-  if (err || !res.data) return null;
-  return res.data.data;
+  if (err) throw err;
+  return res.data;
 };
 
-export const addItem: RequestFunc<
-  { boxId: string; message: string; author?: string },
-  CreateResult
-> = async ({ boxId, message, author }, headers) => {
+export const addItem = async ({ id, message, author }: { id: string, message: string, author?: string }, headers?: IncomingHttpHeaders): Promise<AddItemResponse> => {
   const [err, res] = await to(
-    client.post<AddItemResponseData>(
-      `/boxes/${boxId}/add-item`,
+    client.post<AddItemResponse>(
+      `/boxes/${id}/add-item`,
       { message, author },
       {
         ...(headers && { headers: { cookie: String(headers.cookie) } }),
       }
     )
   );
-  if (err || !res.data) return null;
-  return res.data.data;
+  if (err) throw err;
+  return res.data;
 };
 
-export const createBox: RequestFunc<{ name: string }, CreateResult> = async (
-  { name },
-  headers
-) => {
+export const createBox = async (
+  name: string,
+  headers?: IncomingHttpHeaders
+): Promise<CreateBoxResponse> => {
   const [err, res] = await to(
-    client.post<CreateBoxResponseData>(
+    client.post<CreateBoxResponse>(
       `/boxes`,
       { name },
       {
@@ -109,56 +56,49 @@ export const createBox: RequestFunc<{ name: string }, CreateResult> = async (
       }
     )
   );
-  if (err || !res.data) return null;
-  return res.data.data;
+  if (err) throw err;
+  return res.data;
 };
 
-export const createDrop: RequestFunc<{ boxId: string }, CreateResult> = async (
-  { boxId },
-  headers
-) => {
+export const createDrop = async (
+  id: string,
+  headers?: IncomingHttpHeaders
+): Promise<CreateDropResponse> => {
   const [err, res] = await to(
-    client.post<CreateDropResponseData>(
-      `/boxes/${boxId}/create-drop`,
+    client.post<CreateDropResponse>(
+      `/boxes/${id}/create-drop`,
       {},
       {
         ...(headers && { headers: { cookie: String(headers.cookie) } }),
       }
     )
   );
-  if (err || !res.data) return null;
-  return res.data.data;
+  if (err) throw err;
+  return res.data;
 };
 
-export const getMe: RequestFunc<
-  {},
-  { id: string; email: string; nickname?: string }
-> = async (_input, headers) => {
+export const fetchMe = async (headers?: IncomingHttpHeaders): Promise<FetchUserResponse> => {
   const [err, res] = await to(
-    client.get(`/me`, {
+    client.get<FetchUserResponse>(`/me`, {
       ...(headers && { headers: { cookie: String(headers.cookie) } }),
     })
   );
-  if (err || !res.data) return null;
-  return res.data.data;
+  if (err) throw err;
+  return res.data;
 };
 
-async (token: string) => (await client.get(`/me`)).data;
+export const requestMagicLink = async (destination: string) => {
+  const [err, res] = await to(client.post(`/auth/login`, { destination }));
+  if (err) return null;
+  return res.data
+}
 
-export const requestMagicLink: RequestFunc<
-  { destination: string },
-  null
-> = async ({ destination }) =>
-  (await client.post(`/auth/login`, { destination })).data;
 
-export const sendToken: RequestFunc<
-  { token: string },
-  { setCookie: string[] }
-> = async ({ token }) => {
+export const sendToken = async (token: string): Promise<any> => {
   const [err, res] = await to(
     client.get(`/auth/login/callback`, { params: { token } })
   );
-  if (err) return null;
+  if (err) throw err;
   const setCookie = res?.headers["set-cookie"] || [];
   return { setCookie };
 };

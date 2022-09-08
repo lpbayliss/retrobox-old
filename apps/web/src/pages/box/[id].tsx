@@ -1,5 +1,6 @@
 import * as react from "@chakra-ui/react";
-import { addItem, Box as BoxType, createDrop, getBox } from "@retrobox/api";
+import { addItem, createDrop, fetchBox } from "@retrobox/api";
+import { Box, FetchBoxResponse } from "@retrobox/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
@@ -12,14 +13,14 @@ import CreateItemForm, {
   ICreateItemFormInputs,
 } from "../../components/create-item-form/create-item-form.component";
 
-type Props = { box: BoxType | null };
+type Props = { initialDropData: FetchBoxResponse };
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   req,
 }) => {
-  const box = await getBox({ boxId: String(params!.id) }, req.headers);
-  return { props: { box } };
+  const data = await fetchBox(String(params!.id), req.headers);
+  return { props: { initialDropData: data } };
 };
 
 const BoxPage: NextPage<Props> = (props) => {
@@ -28,32 +29,32 @@ const BoxPage: NextPage<Props> = (props) => {
   const toast = react.useToast();
   const queryClient = useQueryClient();
 
-  const { data: box } = useQuery(
-    ["box", props.box!.id],
-    async () => await getBox({ boxId: props.box!.id }),
+  const { data: { data: box} } = useQuery(
+    ["box", props.initialDropData.data.id],
+    async () => await fetchBox(props.initialDropData.data.id),
     {
-      initialData: props.box,
+      initialData: props.initialDropData,
     }
   );
 
   const addItemMutation = useMutation(
     (newItem: { message: string; author?: string }) => {
       return addItem({
-        boxId: props.box!.id,
+        id: box.id,
         message: newItem.message,
         author: newItem.author,
       });
     }
   );
 
-  const createDropMutation = useMutation((boxId: string) => {
-    return createDrop({ boxId });
+  const createDropMutation = useMutation((id: string) => {
+    return createDrop(id);
   });
 
   const handleOnSubmit = async (input: ICreateItemFormInputs) => {
     addItemMutation.mutate(input, {
       onSuccess: () => {
-        queryClient.invalidateQueries(["box", props.box!.id]);
+        queryClient.invalidateQueries(["box", box.id]);
         toast({
           title: intl.formatMessage({ id: "ITEM_ADDED_SUCCESS_TITLE" }),
           description: intl.formatMessage({ id: "ITEM_ADDED_SUCCESS_MESSAGE" }),
@@ -77,9 +78,9 @@ const BoxPage: NextPage<Props> = (props) => {
   };
 
   const handleCreateDrop = async () => {
-    createDropMutation.mutate(props.box!.id, {
+    createDropMutation.mutate(box.id, {
       onSuccess: () => {
-        queryClient.invalidateQueries(["box", props.box!.id]);
+        queryClient.invalidateQueries(["box", box.id]);
         toast({
           title: intl.formatMessage({ id: "DROP_CREATED_SUCCESS_TITLE" }),
           description: intl.formatMessage({

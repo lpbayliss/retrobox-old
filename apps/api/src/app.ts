@@ -16,7 +16,8 @@ import passport from "passport";
 import expressSession from "express-session";
 import AWS from "aws-sdk";
 import { IConfigService } from "./services/config/config.interface";
-import { IFetchOrCreateUserByEmailUseCase, IFetchUserByIdUseCase } from "./usecases/user";
+import { configService } from "./services";
+import { fetchOrCreateUserByEmailUseCase, fetchUserByIdUseCase } from "./usecases";
 
 declare module "express-session" {
   interface Session {}
@@ -27,7 +28,7 @@ declare global {
     interface User {
       id: string;
       email: string;
-      nickname: string | null;
+      nickname?: string | null;
     }
   }
 }
@@ -44,16 +45,12 @@ const defaultSessionConfig = {
   },
 };
 
-const createApp = (
-  configService: IConfigService,
-  fetchOrCreateUserByEmailUseCase: IFetchOrCreateUserByEmailUseCase,
-  fetchUserByIdUseCase: IFetchUserByIdUseCase
-) => {
+const createApp = () => {
   const magicLogin = new MagicLoginStrategy({
     secret: configService.secrets.magicLinkSecret,
     callbackUrl: "/login",
     sendMagicLink: async (destination, href) => {
-      var params = {
+      const params = {
         Destination: {
           ToAddresses: [destination],
         },
@@ -76,7 +73,7 @@ const createApp = (
         .promise();
     },
     verify: async ({ destination: email }, callback) => {
-      const [err, user] = await fetchOrCreateUserByEmailUseCase.execute({ email })
+      const [err, user] = await fetchOrCreateUserByEmailUseCase.execute(email)
       if (err) return callback(err)
       callback(undefined, user)
     },
@@ -89,7 +86,7 @@ const createApp = (
   });
 
   passport.deserializeUser<string>(async (id, done) => {
-    const [err, user] = await fetchUserByIdUseCase.execute({ id });
+    const [err, user] = await fetchUserByIdUseCase.execute(id);
     if (err) return done(err)
     done(null, user);
   });
@@ -136,17 +133,6 @@ const createApp = (
       (_req, res) => {
         res.sendStatus(200);
       }
-    )
-    .get(
-      "/me",
-      (req, res, _next) => {
-        if (req.isAuthenticated()) {
-          res.json(req.user);
-        } else {
-          res.sendStatus(401);
-        }
-      },
-      (req: Request, res: Response) => res.json(req.user)
     )
     .use(boxRouter)
     .use(itemRouter)

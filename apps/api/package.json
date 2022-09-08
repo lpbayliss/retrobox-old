@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@retrobox/database": "*",
+    "@retrobox/types": "*",
     "@types/cookie-parser": "^1.4.3",
     "@types/dotenv": "^8.2.0",
     "await-to-js": "^3.0.0",
