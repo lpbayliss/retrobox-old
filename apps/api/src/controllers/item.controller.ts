@@ -1,21 +1,30 @@
-import { Request } from "express";
-import { itemInteractor } from "../usecases";
-import { Response } from "../lib/types";
+import { Request, Response } from "express";
+import { DeleteItemResponse, ProblemJson } from "@retrobox/types";
+import { removeItemUseCase } from "../usecases";
 
-type DeleteItemResponse = Response<null>;
+const deleteItem = async (req: Request, res: Response<DeleteItemResponse | ProblemJson>) => {
+  const [err, item] = await removeItemUseCase.execute(req.params.id);
 
-export const createItemController = () => ({
-  deleteItem: async (req: Request, res: DeleteItemResponse) => {
-    const [err] = await itemInteractor.removeItem(req.params.id);
-
-    if (err)
-      return res.status(400).send({
-        title: "https://retrobox.app/probs/couldnt-delete-item",
-        status: 400,
-        detail: "Something went wrong while deleting an item",
+  if (err) {
+    if ((err.name === "NotFoundError"))
+      return res.status(404).send({
+        title: "https://retrobox.app/probs/item-not-found",
+        status: 404,
+        detail: err.message,
         instance: req.originalUrl,
       });
+    else return res.status(500).send({
+      title: "https://retrobox.app/probs/internal-server-error",
+      status: 500,
+      detail: "Something went wrong while deleting an item",
+      instance: req.originalUrl,
+    });
+  }
 
-    return res.status(204).send({ data: null, meta: null });
-  },
-});
+
+  return res.status(204).send({ data: item, meta: null });
+}
+
+export default {
+  deleteItem
+}

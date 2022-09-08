@@ -1,47 +1,69 @@
-import { IDropRepository } from "../lib/types";
 import { prisma } from "@retrobox/database";
+import { Drop } from "@retrobox/types";
 import to from "await-to-js";
 import { NotFoundError } from "../lib/errors";
+import { Result } from "../lib/types";
 
-export const createDropRepository = (): IDropRepository => ({
-  create: async (id) => {
-    const [err, drop] = await to(
-      prisma.drop.create({
-        data: { box: { connect: { id } } },
-        select: { id: true },
-      })
-    );
+const create = async (id: string): Result<Drop> => {
+  const [err, drop] = await to(
+    prisma.drop.create({
+      data: { box: { connect: { id } } },
+      include: { items: true, _count: { select: { items: true } } },
+    })
+  );
 
-    if (err) return [err];
+  if (err) return [err];
 
-    return [null, drop.id];
-  },
-  fetch: async (id) => {
-    const [err, drop] = await to(
-      prisma.drop.findUnique({
-        where: { id },
-        select: {
-          id: true,
-          createdAt: true,
-          items: { select: { message: true, author: true } },
-        },
-      })
-    );
+  return [null, {
+    id: drop.id,
+    createdAt: drop.createdAt,
+    items: drop.items.map((item) => ({ message: item.message, author: item.author || undefined })),
+    itemCount: drop._count.items,
+  }];
+}
 
-    if (err) return [err];
+const fetch = async (id: string): Result<Drop> => {
+  const [err, drop] = await to(
+    prisma.drop.findUnique({
+      where: { id },
+      include: { items: true, _count: { select: { items: true } } },
+    })
+  );
 
-    return [null, drop];
-  },
-  addItems: async (id, itemIds) => {
-    const [err] = await to(
-      prisma.drop.update({
-        where: { id },
-        data: { items: { connect: itemIds.map((itemId) => ({ id: itemId })) } },
-      })
-    );
+  if (err) return [err];
+  if (!drop) return [new NotFoundError(`Could not find drop for id ${id}`)];
 
-    if (err) return [err];
+  return [null, {
+    id: drop.id,
+    createdAt: drop.createdAt,
+    items: drop.items.map((item) => ({ message: item.message, author: item.author || undefined })),
+    itemCount: drop._count.items,
+  }];
+}
 
-    return [null, true];
-  },
-});
+const addItems = async (id: string, itemIds: string[]): Result<Drop> => {
+  const [err, drop] = await to(
+    prisma.drop.update({
+      where: { id },
+      data: { items: { connect: itemIds.map((itemId) => ({ id: itemId })) } },
+      include: { items: true, _count: { select: { items: true } } },
+    })
+  );
+
+  if (err) return [err];
+  if (!drop) return [new NotFoundError(`Could not find drop for id ${id}`)];
+
+
+  return [null, {
+    id: drop.id,
+    createdAt: drop.createdAt,
+    items: drop.items.map((item) => ({ message: item.message, author: item.author || undefined })),
+    itemCount: drop._count.items,
+  }];
+}
+
+export default {
+  create,
+  fetch,
+  addItems
+}

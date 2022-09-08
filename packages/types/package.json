@@ -1,0 +1,30 @@
+{
+  "name": "@retrobox/types",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf .turbo node_modules dist",
+    "dev": "tsup --watch",
+    "lint": "eslint ./src --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@retrobox/tsconfig": "*",
+    "eslint": "8.23.0",
+    "eslint-config-custom": "*",
+    "rimraf": "3.0.2",
+    "tsconfig": "*",
+    "tsup": "6.2.3",
+    "tsx": "3.9.0",
+    "typescript": "4.7.4"
+  },
+  "description": ""
+}

@@ -12,14 +12,13 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
+import { requestMagicLink, sendToken } from "@retrobox/api";
 import { useMutation } from "@tanstack/react-query";
-import to from "await-to-js";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import api from "../api";
 import { Logo } from "../components/logo";
 
 export type ILoginFormInputs = {
@@ -35,11 +34,8 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
   res,
 }) => {
   if (!query.token) return { props: { error: false } };
-
-  const [err, response] = await to(api.sendToken(String(query.token)));
-  if (err) return { props: { error: true } };
-
-  res.setHeader("set-cookie", String(response?.headers["set-cookie"]));
+  const result = await sendToken(String(query.token));
+  res.setHeader("set-cookie", result?.setCookie || []);
   return { redirect: { destination: "/" }, props: { error: false } };
 };
 
@@ -54,8 +50,8 @@ const Login: NextPage<LoginProps> = ({ error }) => {
   } = useForm<ILoginFormInputs>();
 
   const requestMagicLinkMutation = useMutation(
-    (payload: { destination: string }) => {
-      return api.requestMagicLink(payload.destination);
+    ({ destination }: { destination: string }) => {
+      return requestMagicLink(destination);
     }
   );
 

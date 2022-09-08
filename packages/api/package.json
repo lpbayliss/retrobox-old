@@ -1,0 +1,37 @@
+{
+  "name": "@retrobox/api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf .turbo node_modules dist",
+    "dev": "tsup --watch",
+    "lint": "eslint ./src --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@retrobox/tsconfig": "*",
+    "@retrobox/types": "*",
+    "eslint": "8.23.0",
+    "eslint-config-custom": "*",
+    "rimraf": "3.0.2",
+    "tsconfig": "*",
+    "tsup": "6.2.3",
+    "tsx": "3.9.0",
+    "typescript": "4.7.4"
+  },
+  "dependencies": {
+    "await-to-js": "^3.0.0",
+    "axios": "^0.27.2",
+    "http": "^0.0.1-security"
+  }
+}
