@@ -1,8 +1,23 @@
+import {
+  AddItemResponse,
+  CreateBoxResponse,
+  CreateDropResponse,
+  FetchBoxResponse,
+  ProblemJson,
+} from "@retrobox/types";
 import { Request, Response } from "express";
-import { AddItemResponse, CreateBoxResponse, CreateDropResponse, FetchBoxResponse, ProblemJson } from "@retrobox/types"
-import { addItemToBoxUseCase, createBoxUseCase, createDropFromBoxUseCase, fetchBoxUseCase } from "../usecases";
 
-const createBox = async (req: Request, res: Response<CreateBoxResponse | ProblemJson>) => {
+import {
+  addItemToBoxUseCase,
+  createBoxUseCase,
+  createDropFromBoxUseCase,
+  fetchBoxUseCase,
+} from "../usecases";
+
+const createBox = async (
+  req: Request,
+  res: Response<CreateBoxResponse | ProblemJson>
+) => {
   const [err, box] = await createBoxUseCase.execute(req.body.name);
 
   if (err)
@@ -16,11 +31,14 @@ const createBox = async (req: Request, res: Response<CreateBoxResponse | Problem
   return res.status(201).send({ data: box, meta: null });
 };
 
-const fetchBox = async (req: Request, res: Response<FetchBoxResponse | ProblemJson>) => {
+const fetchBox = async (
+  req: Request,
+  res: Response<FetchBoxResponse | ProblemJson>
+) => {
   const [err, box] = await fetchBoxUseCase.execute(req.params.id);
 
   if (err) {
-    if ((err.name === "NotFoundError"))
+    if (err.name === "NotFoundError")
       return res.status(404).send({
         title: "https://retrobox.app/probs/box-not-found",
         status: 404,
@@ -39,7 +57,10 @@ const fetchBox = async (req: Request, res: Response<FetchBoxResponse | ProblemJs
   return res.status(200).send({ data: box, meta: null });
 };
 
-const addItem = async (req: Request, res: Response<AddItemResponse | ProblemJson>) => {
+const addItem = async (
+  req: Request,
+  res: Response<AddItemResponse | ProblemJson>
+) => {
   const [err, item] = await addItemToBoxUseCase.execute(
     req.params.id,
     req.body.message,
@@ -57,7 +78,10 @@ const addItem = async (req: Request, res: Response<AddItemResponse | ProblemJson
   return res.status(201).send({ data: item, meta: null });
 };
 
-const createDrop = async (req: Request, res: Response<CreateDropResponse | ProblemJson>) => {
+const createDrop = async (
+  req: Request,
+  res: Response<CreateDropResponse | ProblemJson>
+) => {
   const [err, drop] = await createDropFromBoxUseCase.execute(req.params.id);
 
   if (err)
@@ -75,5 +99,5 @@ export default {
   createBox,
   fetchBox,
   addItem,
-  createDrop
-}
+  createDrop,
+};

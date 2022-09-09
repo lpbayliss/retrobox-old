@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { boxController } from "../controllers";
 import { isAuthenticatedMiddleware } from "../middleware";
 

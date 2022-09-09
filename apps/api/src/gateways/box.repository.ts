@@ -1,6 +1,7 @@
 import { prisma } from "@retrobox/database";
 import { Box } from "@retrobox/types";
 import to from "await-to-js";
+
 import { NotFoundError } from "../lib/errors";
 import { Result } from "../lib/types";
 
@@ -19,8 +20,8 @@ const create = async (name: string): Result<Box> => {
             createdAt: true,
           },
           orderBy: {
-            createdAt: 'desc'
-          }
+            createdAt: "desc",
+          },
         },
       },
     })
@@ -34,11 +35,13 @@ const create = async (name: string): Result<Box> => {
       id: box.id,
       name: box.name,
       itemCount: box._count.items,
-      latestDrop: box.drops.length ? {
-        id: box.drops[0].id,
-        itemCount: box.drops[0]._count.items,
-        createdAt: box.drops[0].createdAt,
-      } : null,
+      latestDrop: box.drops.length
+        ? {
+            id: box.drops[0].id,
+            itemCount: box.drops[0]._count.items,
+            createdAt: box.drops[0].createdAt,
+          }
+        : null,
       allDrops: box.drops.map((drop) => ({
         id: drop.id,
         itemCount: drop._count.items,
@@ -76,11 +79,13 @@ const fetch = async (id: string): Result<Box> => {
       id: box.id,
       name: box.name,
       itemCount: box._count.items,
-      latestDrop: box.drops.length ? {
-        id: box.drops[0].id,
-        itemCount: box.drops[0]._count.items,
-        createdAt: box.drops[0].createdAt,
-      } : null,
+      latestDrop: box.drops.length
+        ? {
+            id: box.drops[0].id,
+            itemCount: box.drops[0]._count.items,
+            createdAt: box.drops[0].createdAt,
+          }
+        : null,
       allDrops: box.drops.map((drop) => ({
         id: drop.id,
         itemCount: drop._count.items,

@@ -6,8 +6,8 @@ const execute = async (email: string): Result<User> => {
   const [err, user] = await userRepository.fetchOrCreateByEmail(email);
   if (err) return [err];
   return [null, user];
-}
+};
 
 export default {
-  execute
-}
+  execute,
+};

@@ -9,5 +9,5 @@ const execute = async (email: string, nickname: string): Result<User> => {
 };
 
 export default {
-  execute
-}
+  execute,
+};

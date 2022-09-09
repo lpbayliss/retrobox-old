@@ -14,11 +14,10 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:seed": "tsx src/seed.ts",
     "dev": "tsup --watch",
     "format": "prisma format",
     "generate": "prisma generate",
-    "lint": "eslint ./src --fix",
+    "lint": "eslint src/**/*.ts* --fix",
     "prebuild": "npm run generate",
     "predev": "npm run generate",
     "studio": "prisma studio"
@@ -29,7 +28,7 @@
   "devDependencies": {
     "@retrobox/tsconfig": "*",
     "eslint": "8.23.0",
-    "eslint-config-custom": "*",
+    "eslint-config-custom-server": "*",
     "prisma": "4.2.1",
     "rimraf": "3.0.2",
     "tsconfig": "*",

@@ -6,8 +6,8 @@ const execute = async (name: string): Result<Item> => {
   const [err, item] = await itemRepository.remove(name);
   if (err) return [err];
   return [null, item];
-}
+};
 
 export default {
-  execute
-}
+  execute,
+};

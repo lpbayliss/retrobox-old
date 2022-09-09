@@ -1,34 +1,28 @@
 {
-  "name": "retrobox",
-  "version": "0.0.0",
   "private": true,
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rimraf node_modules .env",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "docker-compose:up": "docker-compose -f docker-compose.yml up -d",
     "deploy:api": "flyctl deploy --config ./apps/api/fly.toml --dockerfile ./Dockerfile.api",
     "deploy:web": "flyctl deploy --config ./apps/web/fly.toml --dockerfile ./Dockerfile.web",
-    "db:migrate:deploy": "cd packages/database && yarn run db:migrate:deploy",
-    "db:push": "cd packages/database && db:push",
-    "db:seed": "cd packages/database && db:seed",
-    "generate": "cd packages/database && generate"
+    "db:migrate:deploy": "cd packages/database && yarn run db:migrate:deploy"
   },
+  "dependencies": {},
   "devDependencies": {
+    "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "prettier": "latest",
     "turbo": "latest"
-  },
-  "engines": {
-    "npm": ">=7.0.0",
-    "node": ">=14.0.0"
-  },
-  "dependencies": {},
-  "packageManager": "yarn@1.22.19"
+  }
 }

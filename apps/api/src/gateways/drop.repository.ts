@@ -1,6 +1,7 @@
 import { prisma } from "@retrobox/database";
 import { Drop } from "@retrobox/types";
 import to from "await-to-js";
+
 import { NotFoundError } from "../lib/errors";
 import { Result } from "../lib/types";
 
@@ -14,13 +15,19 @@ const create = async (id: string): Result<Drop> => {
 
   if (err) return [err];
 
-  return [null, {
-    id: drop.id,
-    createdAt: drop.createdAt,
-    items: drop.items.map((item) => ({ message: item.message, author: item.author || undefined })),
-    itemCount: drop._count.items,
-  }];
-}
+  return [
+    null,
+    {
+      id: drop.id,
+      createdAt: drop.createdAt,
+      items: drop.items.map((item) => ({
+        message: item.message,
+        author: item.author || undefined,
+      })),
+      itemCount: drop._count.items,
+    },
+  ];
+};
 
 const fetch = async (id: string): Result<Drop> => {
   const [err, drop] = await to(
@@ -33,13 +40,19 @@ const fetch = async (id: string): Result<Drop> => {
   if (err) return [err];
   if (!drop) return [new NotFoundError(`Could not find drop for id ${id}`)];
 
-  return [null, {
-    id: drop.id,
-    createdAt: drop.createdAt,
-    items: drop.items.map((item) => ({ message: item.message, author: item.author || undefined })),
-    itemCount: drop._count.items,
-  }];
-}
+  return [
+    null,
+    {
+      id: drop.id,
+      createdAt: drop.createdAt,
+      items: drop.items.map((item) => ({
+        message: item.message,
+        author: item.author || undefined,
+      })),
+      itemCount: drop._count.items,
+    },
+  ];
+};
 
 const addItems = async (id: string, itemIds: string[]): Result<Drop> => {
   const [err, drop] = await to(
@@ -53,17 +66,22 @@ const addItems = async (id: string, itemIds: string[]): Result<Drop> => {
   if (err) return [err];
   if (!drop) return [new NotFoundError(`Could not find drop for id ${id}`)];
 
-
-  return [null, {
-    id: drop.id,
-    createdAt: drop.createdAt,
-    items: drop.items.map((item) => ({ message: item.message, author: item.author || undefined })),
-    itemCount: drop._count.items,
-  }];
-}
+  return [
+    null,
+    {
+      id: drop.id,
+      createdAt: drop.createdAt,
+      items: drop.items.map((item) => ({
+        message: item.message,
+        author: item.author || undefined,
+      })),
+      itemCount: drop._count.items,
+    },
+  ];
+};
 
 export default {
   create,
   fetch,
-  addItems
-}
+  addItems,
+};

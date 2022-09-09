@@ -17,13 +17,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
   const data = await getDrop(String(context.params!.id));
-  return { props: { initialDropData: data  } };
+  return { props: { initialDropData: data } };
 };
 
 const DropPage: NextPage<Props> = (props) => {
   const { asPath } = useRouter();
 
-  const { data: { data: drop } } = useQuery(
+  const {
+    data: { data: drop },
+  } = useQuery(
     ["drop", props.initialDropData.data.id],
     async () => await getDrop(props.initialDropData.data.id),
     {

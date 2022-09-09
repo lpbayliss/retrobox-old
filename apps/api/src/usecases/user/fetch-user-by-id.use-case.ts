@@ -6,8 +6,8 @@ const execute = async (id: string): Result<User> => {
   const [err, user] = await userRepository.fetchById(id);
   if (err) return [err];
   return [null, user];
-}
+};
 
 export default {
-  execute
-}
+  execute,
+};

@@ -10,8 +10,8 @@ const execute = async (
   const [err, item] = await itemRepository.create(boxId, message, author);
   if (err) return [err];
   return [null, item];
-}
+};
 
 export default {
-  execute
-}
+  execute,
+};

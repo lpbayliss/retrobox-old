@@ -1,7 +1,16 @@
+import {
+  AddItemResponse,
+  CreateBoxResponse,
+  CreateDropResponse,
+  FetchBoxResponse,
+  FetchDropResponse,
+  FetchUserResponse,
+  ProblemJson,
+} from "@retrobox/types";
 import to from "await-to-js";
-import { client } from "./client";
-import { AddItemResponse, CreateBoxResponse, CreateDropResponse, FetchBoxResponse, FetchDropResponse, FetchUserResponse, ProblemJson } from "@retrobox/types";
 import { IncomingHttpHeaders } from "http";
+
+import { client } from "./client";
 
 export const fetchBox = async (
   id: string,
@@ -29,7 +38,10 @@ export const getDrop = async (
   return res.data;
 };
 
-export const addItem = async ({ id, message, author }: { id: string, message: string, author?: string }, headers?: IncomingHttpHeaders): Promise<AddItemResponse> => {
+export const addItem = async (
+  { id, message, author }: { id: string; message: string; author?: string },
+  headers?: IncomingHttpHeaders
+): Promise<AddItemResponse> => {
   const [err, res] = await to(
     client.post<AddItemResponse>(
       `/boxes/${id}/add-item`,
@@ -77,7 +89,9 @@ export const createDrop = async (
   return res.data;
 };
 
-export const fetchMe = async (headers?: IncomingHttpHeaders): Promise<FetchUserResponse> => {
+export const fetchMe = async (
+  headers?: IncomingHttpHeaders
+): Promise<FetchUserResponse> => {
   const [err, res] = await to(
     client.get<FetchUserResponse>(`/me`, {
       ...(headers && { headers: { cookie: String(headers.cookie) } }),
@@ -90,9 +104,8 @@ export const fetchMe = async (headers?: IncomingHttpHeaders): Promise<FetchUserR
 export const requestMagicLink = async (destination: string) => {
   const [err, res] = await to(client.post(`/auth/login`, { destination }));
   if (err) return null;
-  return res.data
-}
-
+  return res.data;
+};
 
 export const sendToken = async (token: string): Promise<any> => {
   const [err, res] = await to(

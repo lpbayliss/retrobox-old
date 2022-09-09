@@ -29,7 +29,9 @@ const BoxPage: NextPage<Props> = (props) => {
   const toast = react.useToast();
   const queryClient = useQueryClient();
 
-  const { data: { data: box} } = useQuery(
+  const {
+    data: { data: box },
+  } = useQuery(
     ["box", props.initialDropData.data.id],
     async () => await fetchBox(props.initialDropData.data.id),
     {

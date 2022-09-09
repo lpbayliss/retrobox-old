@@ -9,5 +9,5 @@ const execute = async (id: string): Result<Drop> => {
 };
 
 export default {
-  execute
-}
+  execute,
+};

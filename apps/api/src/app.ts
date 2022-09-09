@@ -17,7 +17,10 @@ import expressSession from "express-session";
 import AWS from "aws-sdk";
 import { IConfigService } from "./services/config/config.interface";
 import { configService } from "./services";
-import { fetchOrCreateUserByEmailUseCase, fetchUserByIdUseCase } from "./usecases";
+import {
+  fetchOrCreateUserByEmailUseCase,
+  fetchUserByIdUseCase,
+} from "./usecases";
 
 declare module "express-session" {
   interface Session {}
@@ -73,9 +76,9 @@ const createApp = () => {
         .promise();
     },
     verify: async ({ destination: email }, callback) => {
-      const [err, user] = await fetchOrCreateUserByEmailUseCase.execute(email)
-      if (err) return callback(err)
-      callback(undefined, user)
+      const [err, user] = await fetchOrCreateUserByEmailUseCase.execute(email);
+      if (err) return callback(err);
+      callback(undefined, user);
     },
   });
 
@@ -87,7 +90,7 @@ const createApp = () => {
 
   passport.deserializeUser<string>(async (id, done) => {
     const [err, user] = await fetchUserByIdUseCase.execute(id);
-    if (err) return done(err)
+    if (err) return done(err);
     done(null, user);
   });
 

@@ -1,6 +1,7 @@
 import { prisma } from "@retrobox/database";
 import { User } from "@retrobox/types";
 import to from "await-to-js";
+
 import { NotFoundError } from "../lib/errors";
 import { Result } from "../lib/types";
 
@@ -20,7 +21,7 @@ const create = async (email: string, nickname?: string): Result<User> => {
       nickname: user.nickname || undefined,
     },
   ];
-}
+};
 
 const fetchById = async (id: string): Result<User> => {
   const [err, user] = await to(prisma.user.findUnique({ where: { id } }));
@@ -36,7 +37,7 @@ const fetchById = async (id: string): Result<User> => {
       nickname: user.nickname || undefined,
     },
   ];
-}
+};
 
 const fetchByEmail = async (email: string): Result<User> => {
   const [err, user] = await to(prisma.user.findUnique({ where: { email } }));
@@ -52,7 +53,7 @@ const fetchByEmail = async (email: string): Result<User> => {
       nickname: user.nickname || undefined,
     },
   ];
-}
+};
 
 const fetchOrCreateByEmail = async (email: string): Result<User> => {
   const [err, user] = await to(
@@ -69,11 +70,11 @@ const fetchOrCreateByEmail = async (email: string): Result<User> => {
       nickname: user.nickname || undefined,
     },
   ];
-}
+};
 
 export default {
   create,
   fetchByEmail,
   fetchById,
-  fetchOrCreateByEmail
+  fetchOrCreateByEmail,
 };

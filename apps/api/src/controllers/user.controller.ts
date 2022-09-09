@@ -1,12 +1,24 @@
 import { FetchUserResponse, ProblemJson } from "@retrobox/types";
 import { Request, Response } from "express";
+
 import { fetchUserByIdUseCase } from "../usecases";
 
-const fetchMe = async (req: Request, res: Response<FetchUserResponse | ProblemJson>) => {
-  const [err, user] = await fetchUserByIdUseCase.execute(req.user!.id);
+const fetchMe = async (
+  req: Request,
+  res: Response<FetchUserResponse | ProblemJson>
+) => {
+  if (!req.user)
+    return res.status(401).send({
+      title: "https://retrobox.app/probs/not-authenticated",
+      status: 401,
+      detail: "You are not authenticated",
+      instance: req.originalUrl,
+    });
+
+  const [err, user] = await fetchUserByIdUseCase.execute(req.user.id);
 
   if (err) {
-    if ((err.name === "NotFoundError"))
+    if (err.name === "NotFoundError")
       return res.status(404).send({
         title: "https://retrobox.app/probs/user-not-found",
         status: 404,
@@ -28,4 +40,3 @@ const fetchMe = async (req: Request, res: Response<FetchUserResponse | ProblemJs
 export default {
   fetchMe,
 };
-

@@ -1,8 +1,12 @@
 import { FetchDropResponse, ProblemJson } from "@retrobox/types";
 import { Request, Response } from "express";
+
 import { fetchDropUseCase } from "../usecases";
 
-const fetchDrop = async (req: Request, res: Response<FetchDropResponse | ProblemJson>) => {
+const fetchDrop = async (
+  req: Request,
+  res: Response<FetchDropResponse | ProblemJson>
+) => {
   const [err, drop] = await fetchDropUseCase.execute(req.params.id);
 
   if (err) {
@@ -28,4 +32,3 @@ const fetchDrop = async (req: Request, res: Response<FetchDropResponse | Problem
 export default {
   fetchDrop,
 };
-

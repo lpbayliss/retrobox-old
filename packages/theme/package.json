@@ -13,7 +13,7 @@
     "clean": "rimraf .turbo node_modules dist",
     "dev": "tsup --watch",
     "format": "prisma format",
-    "lint": "eslint ./src --fix"
+    "lint": "eslint src/**/*.ts* --fix"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.2.4",

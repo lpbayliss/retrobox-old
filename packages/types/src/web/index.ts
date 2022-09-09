@@ -1,5 +1,5 @@
+import { Box, Drop, Item, User } from "@core";
 import { Nullable } from "@utils";
-import { Box, Item, Drop, User } from "@core";
 
 export interface ProblemJson {
   title: string;
@@ -13,10 +13,10 @@ export interface ResponseBody<Data, Meta = void> {
   meta: Nullable<Meta>;
 }
 
-export interface CreateBoxResponse extends ResponseBody<Box, null> { };
-export interface FetchBoxResponse extends ResponseBody<Box, null> { };
-export interface AddItemResponse extends ResponseBody<Item, null> { };
-export interface CreateDropResponse extends ResponseBody<Drop, null> { };
-export interface FetchDropResponse extends ResponseBody<Drop, null> { };
-export interface DeleteItemResponse extends ResponseBody<Item, null> { };
-export interface FetchUserResponse extends ResponseBody<User, null> { };
+export interface CreateBoxResponse extends ResponseBody<Box, null> {}
+export interface FetchBoxResponse extends ResponseBody<Box, null> {}
+export interface AddItemResponse extends ResponseBody<Item, null> {}
+export interface CreateDropResponse extends ResponseBody<Drop, null> {}
+export interface FetchDropResponse extends ResponseBody<Drop, null> {}
+export interface DeleteItemResponse extends ResponseBody<Item, null> {}
+export interface FetchUserResponse extends ResponseBody<User, null> {}
