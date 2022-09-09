@@ -20,6 +20,8 @@ import {
   fetchOrCreateUserByEmailUseCase,
   fetchUserByIdUseCase,
 } from "./usecases";
+import pinoHttp from "pino-http";
+import logger from "./services/logger";
 
 declare module "express-session" {
   interface Session {}
@@ -75,7 +77,7 @@ const createApp = () => {
         .promise();
     },
     verify: async (token, callback) => {
-      console.log("TOKEN?:", token);
+      logger.info("TOKEN?:", token);
       const [err, user] = await fetchOrCreateUserByEmailUseCase.execute(
         token.destination
       );
@@ -100,6 +102,7 @@ const createApp = () => {
     // Setup middleware
     .set("trust proxy", 1)
     .set("port", configService.env.port)
+    .use(pinoHttp(logger.child({ service: "Web" })))
     .use(compression())
     .use(json())
     .use(urlencoded({ extended: true }))
@@ -115,6 +118,7 @@ const createApp = () => {
     .use(passport.initialize())
     .use(passport.session())
     .use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      logger.error(err);
       if (res.headersSent) return next(err);
       return res.status(500).send({
         title: "https://retrobox.app/probs/server-error",
