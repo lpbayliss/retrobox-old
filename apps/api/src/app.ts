@@ -15,7 +15,6 @@ import MagicLoginStrategy from "passport-magic-login";
 import passport from "passport";
 import expressSession from "express-session";
 import AWS from "aws-sdk";
-import { IConfigService } from "./services/config/config.interface";
 import { configService } from "./services";
 import {
   fetchOrCreateUserByEmailUseCase,

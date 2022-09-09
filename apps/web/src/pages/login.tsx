@@ -34,9 +34,14 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
   res,
 }) => {
   if (!query.token) return { props: { error: false } };
-  const result = await sendToken(String(query.token));
-  res.setHeader("set-cookie", result?.setCookie || []);
-  return { redirect: { destination: "/" }, props: { error: false } };
+  try {
+    const result = await sendToken(String(query.token));
+    res.setHeader("set-cookie", result?.setCookie || []);
+    return { redirect: { destination: "/" }, props: { error: false } };
+  } catch (e) {
+    console.log("AUTH ERROR:", e);
+    return { redirect: { destination: "/" }, props: { error: true } };
+  }
 };
 
 const Login: NextPage<LoginProps> = ({ error }) => {

@@ -5,7 +5,6 @@ import {
   FetchBoxResponse,
   FetchDropResponse,
   FetchUserResponse,
-  ProblemJson,
 } from "@retrobox/types";
 import to from "await-to-js";
 import { IncomingHttpHeaders } from "http";
