@@ -1,5 +1,6 @@
 import { FetchUserResponse, ProblemJson } from "@retrobox/types";
 import { Request, Response } from "express";
+import logger from "../services/logger";
 
 import { fetchUserByIdUseCase } from "../usecases";
 
@@ -18,6 +19,7 @@ const fetchMe = async (
   const [err, user] = await fetchUserByIdUseCase.execute(req.user.id);
 
   if (err) {
+    logger.error(err);
     if (err.name === "NotFoundError")
       return res.status(404).send({
         title: "https://retrobox.app/probs/user-not-found",

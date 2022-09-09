@@ -6,6 +6,7 @@ import {
   ProblemJson,
 } from "@retrobox/types";
 import { Request, Response } from "express";
+import logger from "../services/logger";
 
 import {
   addItemToBoxUseCase,
@@ -20,13 +21,15 @@ const createBox = async (
 ) => {
   const [err, box] = await createBoxUseCase.execute(req.body.name);
 
-  if (err)
+  if (err) {
+    logger.error(err);
     return res.status(400).send({
       title: "https://retrobox.app/probs/couldnt-create-box",
       status: 400,
       detail: "Something went wrong while creating a box",
       instance: req.originalUrl,
     });
+  }
 
   return res.status(201).send({ data: box, meta: null });
 };
@@ -38,6 +41,7 @@ const fetchBox = async (
   const [err, box] = await fetchBoxUseCase.execute(req.params.id);
 
   if (err) {
+    logger.error(err);
     if (err.name === "NotFoundError")
       return res.status(404).send({
         title: "https://retrobox.app/probs/box-not-found",
@@ -67,13 +71,15 @@ const addItem = async (
     req.body.author
   );
 
-  if (err)
+  if (err) {
+    logger.error(err);
     return res.status(400).send({
       title: "https://retrobox.app/probs/couldnt-add-item",
       status: 400,
       detail: "Something went wrong while adding an item to a box",
       instance: req.originalUrl,
     });
+  }
 
   return res.status(201).send({ data: item, meta: null });
 };
@@ -84,13 +90,15 @@ const createDrop = async (
 ) => {
   const [err, drop] = await createDropFromBoxUseCase.execute(req.params.id);
 
-  if (err)
+  if (err) {
+    logger.error(err);
     return res.status(400).send({
       title: "https://retrobox.app/probs/couldnt-create-drop",
       status: 400,
       detail: err.message,
       instance: req.originalUrl,
     });
+  }
 
   return res.status(201).send({ data: drop, meta: null });
 };
