@@ -6,7 +6,7 @@ import {
   ProblemJson,
 } from "@retrobox/types";
 import { Request, Response } from "express";
-import logger from "../services/logger";
+import logger from "../services/logger.service";
 
 import {
   addItemToBoxUseCase,

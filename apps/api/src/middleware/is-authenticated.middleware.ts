@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { default as parentLogger } from "../services/logger";
+import { default as parentLogger } from "../services/logger.service";
 
 const logger = parentLogger.child({ service: "auth-middleware" });
 

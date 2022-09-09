@@ -14,14 +14,13 @@ import { getIsDatabaseHealthy } from "./gateways";
 import MagicLoginStrategy from "passport-magic-login";
 import passport from "passport";
 import expressSession from "express-session";
-import AWS from "aws-sdk";
-import { configService } from "./services";
+import { configService, emailService } from "./services";
 import {
   fetchOrCreateUserByEmailUseCase,
   fetchUserByIdUseCase,
 } from "./usecases";
 import pinoHttp from "pino-http";
-import logger from "./services/logger";
+import logger from "./services/logger.service";
 
 declare module "express-session" {
   interface Session {}
@@ -54,27 +53,18 @@ const createApp = () => {
     secret: configService.secrets.magicLinkSecret,
     callbackUrl: "/login",
     sendMagicLink: async (destination, href) => {
-      const params = {
-        Destination: {
-          ToAddresses: [destination],
-        },
-        Message: {
-          Body: {
-            Text: {
-              Charset: "UTF-8",
-              Data: configService.env.appUrl + href,
-            },
-          },
-          Subject: {
+      emailService.send([destination], {
+        Body: {
+          Text: {
             Charset: "UTF-8",
-            Data: "Retrobox Magic Link",
+            Data: configService.env.appUrl + href,
           },
         },
-        Source: "noreply@retrobox.app",
-      };
-      await new AWS.SES({ apiVersion: "2010-12-01" })
-        .sendEmail(params)
-        .promise();
+        Subject: {
+          Charset: "UTF-8",
+          Data: "Retrobox Magic Link",
+        },
+      });
     },
     verify: async (token, callback) => {
       logger.info("TOKEN?:", token);

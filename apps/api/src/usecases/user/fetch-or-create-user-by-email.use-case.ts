@@ -1,7 +1,7 @@
 import { User } from "@retrobox/types";
 import { userRepository } from "../../gateways";
 import { Result } from "../../lib/types";
-import logger from "../../services/logger";
+import logger from "../../services/logger.service";
 
 const execute = async (email: string): Result<User> => {
   const [err, user] = await userRepository.fetchOrCreateByEmail(email);
