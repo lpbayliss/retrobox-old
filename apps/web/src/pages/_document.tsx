@@ -15,7 +15,7 @@ class MyDocument extends Document<Props> {
             name="description"
             content="Retrobox | A small tool for collecting retro items"
           />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/images/favicon.ico" />
         </Head>
         <body>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />

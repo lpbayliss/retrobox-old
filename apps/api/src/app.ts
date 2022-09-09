@@ -74,8 +74,11 @@ const createApp = () => {
         .sendEmail(params)
         .promise();
     },
-    verify: async ({ destination: email }, callback) => {
-      const [err, user] = await fetchOrCreateUserByEmailUseCase.execute(email);
+    verify: async (token, callback) => {
+      console.log("TOKEN?:", token);
+      const [err, user] = await fetchOrCreateUserByEmailUseCase.execute(
+        token.destination
+      );
       if (err) return callback(err);
       callback(undefined, user);
     },
