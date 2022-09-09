@@ -1,3 +1,6 @@
+import compression from "compression";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express, {
   json,
   NextFunction,
@@ -5,22 +8,20 @@ import express, {
   Response,
   urlencoded,
 } from "express";
-import helmet from "helmet";
-import cors from "cors";
-import compression from "compression";
-import cookieParser from "cookie-parser";
-import { boxRouter, dropRouter, itemRouter, userRouter } from "./routes";
-import { getIsDatabaseHealthy } from "./gateways";
-import MagicLoginStrategy from "passport-magic-login";
-import passport from "passport";
 import expressSession from "express-session";
+import helmet from "helmet";
+import passport from "passport";
+import MagicLoginStrategy from "passport-magic-login";
+import pinoHttp from "pino-http";
+
+import { getIsDatabaseHealthy } from "./gateways";
+import { boxRouter, dropRouter, itemRouter, userRouter } from "./routes";
 import { configService, emailService } from "./services";
+import logger from "./services/logger.service";
 import {
   fetchOrCreateUserByEmailUseCase,
   fetchUserByIdUseCase,
 } from "./usecases";
-import pinoHttp from "pino-http";
-import logger from "./services/logger.service";
 
 declare module "express-session" {
   interface Session {}

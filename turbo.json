@@ -14,5 +14,5 @@
       "cache": false
     }
   },
-  "globalDependencies": ["$NEXT_PUBLIC_API_URL", "$NODE_ENV"]
+  "globalDependencies": ["$NEXT_PUBLIC_API_URL", "$NODE_ENV", "$PORT"]
 }
