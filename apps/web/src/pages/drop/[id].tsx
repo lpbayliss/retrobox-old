@@ -1,37 +1,35 @@
 import { Box, Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import { FetchDropResponse } from "@retrobox/types";
 import { useQuery } from "@tanstack/react-query";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormattedDate } from "react-intl";
 
-import api, { FetchDropResponseData } from "../../api";
+import { getDrop } from "../../api";
 import { Card } from "../../components/card";
 
 type Props = {
-  dropId: string;
-  dropData: {
-    id: string;
-    createdAt: Date;
-    items: { message: string; author: string | null }[];
-  };
+  initialDropData: FetchDropResponse;
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { data } = await api.getDrop(context.params!.id as string);
-  return { props: { dropId: context.params!.id as string, dropData: data } };
+  const data = await getDrop(String(context.params!.id));
+  return { props: { initialDropData: data } };
 };
 
 const DropPage: NextPage<Props> = (props) => {
   const { asPath } = useRouter();
 
-  const { data: drop } = useQuery(
-    ["drop", props.dropId],
-    async () => (await api.getDrop(props.dropId)).data,
+  const {
+    data: { data: drop },
+  } = useQuery(
+    ["drop", props.initialDropData.data.id],
+    async () => await getDrop(props.initialDropData.data.id),
     {
-      initialData: props.dropData,
+      initialData: props.initialDropData,
     }
   );
 
@@ -46,19 +44,14 @@ const DropPage: NextPage<Props> = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Flex as="main" h="100vh">
-        <VStack
-          minW={["sm", null, "2xl"]}
-          mx="auto"
-          my="auto"
-          spacing="4"
-        >
+        <VStack minW={["sm", null, "2xl"]} mx="auto" my="auto" spacing="4">
           <Card flexDir="row" w="full" py="8" alignItems="center">
             <Box>
               <Heading as="h1" mb="2">
                 Drop
               </Heading>
               <Text as="h2" color="gray.600" fontStyle="italic" size="xs">
-                Dropped on{" "}
+                Dropped on
                 <FormattedDate value={drop.createdAt} dateStyle="full" />
               </Text>
             </Box>
@@ -67,16 +60,17 @@ const DropPage: NextPage<Props> = (props) => {
             </Button>
           </Card>
 
-          {drop.items.map((item: any, index: number) => (
-            <Card w="full" key={`item-${index}`}>
-              <Text fontSize="xl">{`"${item.message}"`}</Text>
-              <Text
-                alignSelf="flex-end"
-                color="gray.600"
-                fontStyle="italic"
-              >{`- ${item.author ? item.author : "Anonymous"}`}</Text>
-            </Card>
-          ))}
+          {drop &&
+            drop.items.map((item: any, index: number) => (
+              <Card w="full" key={`item-${index}`}>
+                <Text fontSize="xl">{`"${item.message}"`}</Text>
+                <Text
+                  alignSelf="flex-end"
+                  color="gray.600"
+                  fontStyle="italic"
+                >{`- ${item.author ? item.author : "Anonymous"}`}</Text>
+              </Card>
+            ))}
         </VStack>
       </Flex>
       <footer></footer>

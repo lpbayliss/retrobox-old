@@ -9,7 +9,7 @@ const Card: ComponentStyleConfig = {
     boxShadow: ["none", null, mode("md", "none")(props)],
     padding: 6,
     borderRadius: "base",
-    minW: "sm"
+    minW: "sm",
   }),
 };
 

@@ -1,11 +1,11 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react/";
 import { useMutation } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormattedMessage } from "react-intl";
 
-import api from "../api";
+import { createBox } from "../api";
 import { Card } from "../components/card";
 import {
   CreateBoxForm,
@@ -16,13 +16,13 @@ const Index: NextPage = () => {
   const router = useRouter();
 
   const mutation = useMutation((input: { name: string }) => {
-    return api.createBox(input.name);
+    return createBox(input.name);
   });
 
   const handleOnSubmit = async (input: ICreateBoxFormInputs) => {
     mutation.mutate(input, {
-      onSuccess: (data) => {
-        router.push(`/box/${data.data.id}`);
+      onSuccess: ({ data }) => {
+        router.push(`/box/${data.id}`);
       },
     });
   };

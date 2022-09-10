@@ -1,9 +1,4 @@
-import { createBoxController } from "./box.controller";
-import { createItemController } from "./item.controller";
-import { createDropController } from "./drop.controller";
-
-export const boxController = createBoxController();
-export const itemController = createItemController();
-export const dropController = createDropController();
-
-export { userController } from './user'
+export { default as boxController } from "./box.controller";
+export { default as dropController } from "./drop.controller";
+export { default as itemController } from "./item.controller";
+export { default as userController } from "./user.controller";

@@ -1,6 +1,6 @@
 export class ErrorWithMetadata extends Error {
-  public readonly meta?: any;
-  constructor(message: string, meta?: any) {
+  public readonly meta?: Record<string, string>;
+  constructor(message: string, meta?: Record<string, string>) {
     super(message);
     Object.setPrototypeOf(this, ErrorWithMetadata.prototype);
     this.name = ErrorWithMetadata.name;
@@ -9,8 +9,8 @@ export class ErrorWithMetadata extends Error {
 }
 
 export class InternalError extends ErrorWithMetadata {
-  public readonly meta?: any;
-  constructor(name: string, message: string, meta?: any) {
+  public readonly meta?: Record<string, string>;
+  constructor(name: string, message: string, meta?: Record<string, string>) {
     super(message, meta);
     Object.setPrototypeOf(this, InternalError.prototype);
     this.name = name;
@@ -18,11 +18,10 @@ export class InternalError extends ErrorWithMetadata {
 }
 
 export class NotFoundError extends InternalError {
-  public readonly meta?: any;
-  constructor(message: string, meta?: any) {
-    super(message, meta);
+  public readonly meta?: Record<string, string>;
+  constructor(message: string, meta?: Record<string, string>) {
+    super(NotFoundError.name, message, meta);
     Object.setPrototypeOf(this, NotFoundError.prototype);
-    this.name = NotFoundError.name;
   }
 }
 

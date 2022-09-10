@@ -9,7 +9,7 @@ import {
   StackProps,
   VStack,
 } from "@chakra-ui/react";
-import { SubmitHandler,useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 export type ICreateBoxFormInputs = {
@@ -20,7 +20,10 @@ type Props = {
   onSubmit(data: ICreateBoxFormInputs): void;
 };
 
-const CreateBoxForm = ({ onSubmit, ...props }: Props & Omit<StackProps, 'onSubmit'>) => {
+const CreateBoxForm = ({
+  onSubmit,
+  ...props
+}: Props & Omit<StackProps, "onSubmit">) => {
   const intl = useIntl();
 
   const {
@@ -33,7 +36,12 @@ const CreateBoxForm = ({ onSubmit, ...props }: Props & Omit<StackProps, 'onSubmi
     onSubmit(data);
 
   return (
-    <VStack as="form" onSubmit={handleSubmit(handleOnSubmit)} spacing="4" {...props}>
+    <VStack
+      as="form"
+      onSubmit={handleSubmit(handleOnSubmit)}
+      spacing="4"
+      {...props}
+    >
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>
           <FormattedMessage id="CREATE_BOX_LABEL" />
@@ -59,7 +67,7 @@ const CreateBoxForm = ({ onSubmit, ...props }: Props & Omit<StackProps, 'onSubmi
           {errors.name && errors.name.message}
         </FormErrorMessage>
       </FormControl>
-      <Divider/>
+      <Divider />
       <Button w="full" isLoading={isSubmitting} type="submit">
         <FormattedMessage id="CREATE_BOX_BUTTON" />
       </Button>

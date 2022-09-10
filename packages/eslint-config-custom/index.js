@@ -1,12 +1,18 @@
 module.exports = {
-  extends: ["next", "prettier"],
+  extends: ["next", "turbo", "prettier"],
+  plugins: ["chakra-ui", "simple-import-sort"],
   settings: {
-    next: {
-      rootDir: ["apps/*/", "packages/*/"],
+    react: {
+      version: "detect",
     },
   },
   rules: {
     "@next/next/no-html-link-for-pages": "off",
     "react/jsx-key": "off",
+    "chakra-ui/props-order": "error",
+    "chakra-ui/props-shorthand": "error",
+    "chakra-ui/require-specific-component": "error",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
   },
 };

@@ -1,15 +1,26 @@
-import createApp from "./app";
+import errorHandler from "errorhandler";
+
+import app from "./app";
 import { configService } from "./services";
-import { fetchOrCreateUserByEmailUseCase, fetchUserByIdUseCase } from "./usecases";
+import logger from "./services/logger.service";
 
-const app = createApp(
-  configService,
-  fetchOrCreateUserByEmailUseCase,
-  fetchUserByIdUseCase
-);
+/**
+ * Error Handler. Provides full stack
+ */
+if (configService.NODE_ENV === "development") {
+  app.use(errorHandler());
+}
 
-app.listen(app.get("port"), () => {
-  console.log(
-    `⚡️[server]: Server is running at https://localhost:${app.get("port")}`
+/**
+ * Start Express server.
+ */
+const server = app.listen(app.get("port"), () => {
+  logger.info(
+    `App is running at http://localhost:${app.get("port")} in ${app.get(
+      "env"
+    )} mode`
   );
+  logger.info("Press CTRL-C to stop\n");
 });
+
+export default server;

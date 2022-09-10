@@ -33,3 +33,7 @@ yarn-error.log*
 
 # turbo
 .turbo
+
+# logs*
+error.log
+combined.log

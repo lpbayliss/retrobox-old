@@ -1,96 +1,144 @@
-import { IBoxRepository } from "../lib/types";
 import { prisma } from "@retrobox/database";
+import { Box } from "@retrobox/types";
 import to from "await-to-js";
+
 import { NotFoundError } from "../lib/errors";
+import { Result } from "../lib/types";
 
-export const createBoxRepository = (): IBoxRepository => ({
-  create: async (name: string) => {
-    const [err, box] = await to(
-      prisma.box.create({
-        data: { name },
-        select: { id: true },
-      })
-    );
-
-    if (err) return [err];
-
-    return [null, box.id];
-  },
-
-  fetch: async (id) => {
-    const [err, box] = await to(
-      prisma.box.findUnique({
-        where: { id },
-        select: {
-          id: true,
-          name: true,
-          _count: { select: { items: true } },
-          drops: {
-            select: {
-              id: true,
-              _count: { select: { items: true } },
-              createdAt: true,
-            },
+const create = async (name: string): Result<Box> => {
+  const [err, box] = await to(
+    prisma.box.create({
+      data: { name },
+      select: {
+        id: true,
+        name: true,
+        _count: { select: { items: true } },
+        drops: {
+          select: {
+            id: true,
+            _count: { select: { items: true } },
+            createdAt: true,
+          },
+          orderBy: {
+            createdAt: "desc",
           },
         },
-      })
-    );
+      },
+    })
+  );
 
-    if (err) return [err];
+  if (err) return [err];
 
-    const mappedBox = box
-      ? {
-          id: box.id,
-          name: box.name,
-          itemCount: box._count.items,
-          drops: box.drops.map((drop) => ({
-            id: drop.id,
-            itemCount: drop._count.items,
-            createdAt: drop.createdAt,
-          })),
-        }
-      : null;
+  return [
+    null,
+    {
+      id: box.id,
+      name: box.name,
+      itemCount: box._count.items,
+      latestDrop: box.drops.length
+        ? {
+            id: box.drops[0].id,
+            itemCount: box.drops[0]._count.items,
+            createdAt: box.drops[0].createdAt,
+          }
+        : null,
+      allDrops: box.drops.map((drop) => ({
+        id: drop.id,
+        itemCount: drop._count.items,
+        createdAt: drop.createdAt,
+      })),
+    },
+  ];
+};
 
-    return [null, mappedBox];
-  },
-
-  fetchItemCount: async (id) => {
-    const [err, box] = await to(
-      prisma.box.findUnique({
-        where: { id },
-        select: {
-          _count: { select: { items: true } },
+const fetch = async (id: string): Result<Box> => {
+  const [err, box] = await to(
+    prisma.box.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        _count: { select: { items: true } },
+        drops: {
+          select: {
+            id: true,
+            _count: { select: { items: true } },
+            createdAt: true,
+          },
         },
-      })
-    );
+      },
+    })
+  );
 
-    if (err) return [err];
+  if (err) return [err];
+  if (!box) return [new NotFoundError(`Could not find box for id ${id}`)];
 
-    return [null, box?._count.items || 0];
-  },
+  return [
+    null,
+    {
+      id: box.id,
+      name: box.name,
+      itemCount: box._count.items,
+      latestDrop: box.drops.length
+        ? {
+            id: box.drops[0].id,
+            itemCount: box.drops[0]._count.items,
+            createdAt: box.drops[0].createdAt,
+          }
+        : null,
+      allDrops: box.drops.map((drop) => ({
+        id: drop.id,
+        itemCount: drop._count.items,
+        createdAt: drop.createdAt,
+      })),
+    },
+  ];
+};
 
-  empty: async (id) => {
-    const [findErr, box] = await to(
-      prisma.box.findUnique({
-        where: { id },
-        select: { items: { select: { id: true } } },
-      })
-    );
+const fetchItemCount = async (id: string): Result<number> => {
+  const [err, box] = await to(
+    prisma.box.findUnique({
+      where: { id },
+      select: {
+        _count: { select: { items: true } },
+      },
+    })
+  );
 
-    if (findErr) return [findErr];
-    if (!box) return [new NotFoundError(`Could not find box for id ${id}`)];
+  if (err) return [err];
+  if (!box) return [new NotFoundError(`Could not find box for id ${id}`)];
 
-    const itemIds = box?.items.map((item) => item.id);
+  return [null, box._count.items];
+};
 
-    const [updateErr] = await to(
-      prisma.box.update({
-        where: { id },
-        data: { items: { set: [] } },
-      })
-    );
+const empty = async (id: string): Result<string[]> => {
+  const [findErr, box] = await to(
+    prisma.box.findUnique({
+      where: { id },
+      select: { items: { select: { id: true } } },
+    })
+  );
 
-    if (updateErr) return [updateErr];
+  if (findErr) return [findErr];
+  if (!box) return [new NotFoundError(`Could not find box for id ${id}`)];
 
-    return [null, itemIds];
-  },
-});
+  const itemIds = box?.items.map((item) => item.id);
+
+  const [updateErr] = await to(
+    prisma.box.update({
+      where: { id },
+      data: { items: { set: [] } },
+    })
+  );
+
+  if (updateErr) return [updateErr];
+
+  return [null, itemIds];
+};
+
+export default {
+  create,
+  fetch,
+  fetchItemCount,
+  empty,
+};
