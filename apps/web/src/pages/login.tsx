@@ -34,12 +34,13 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
   res,
 }) => {
   if (!query.token) return { props: { error: false } };
+  console.log("Token found!");
   try {
     const result = await sendToken(String(query.token));
+    console.log("cookie to pass", result?.setCookie);
     res.setHeader("set-cookie", result?.setCookie || []);
     return { redirect: { destination: "/" }, props: { error: false } };
   } catch (e) {
-    console.log("AUTH ERROR:", e);
     return { redirect: { destination: "/" }, props: { error: true } };
   }
 };

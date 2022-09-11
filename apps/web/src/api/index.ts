@@ -60,16 +60,16 @@ export const addItem = async (
 };
 
 export const createBox = async (
-  name: string,
-  headers?: IncomingHttpHeaders
+  name: string
+  // headers?: IncomingHttpHeaders
 ): Promise<CreateBoxResponse> => {
   const [err, res] = await to(
     client.post<CreateBoxResponse>(
       `/boxes`,
-      { name },
-      {
-        ...(headers && { headers: { cookie: String(headers.cookie) } }),
-      }
+      { name }
+      // {
+      //   ...(headers && { headers: { cookie: String(headers.cookie) } }),
+      // }
     )
   );
   if (err) throw err;
