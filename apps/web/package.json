@@ -19,7 +19,7 @@
     "@emotion/styled": "11.10.4",
     "@retrobox/theme": "*",
     "@retrobox/types": "*",
-    "@tanstack/react-query": "4.2.3",
+    "@tanstack/react-query": "4.3.4",
     "await-to-js": "3.0.0",
     "axios": "0.27.2",
     "framer-motion": "7.2.1",
