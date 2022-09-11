@@ -13,13 +13,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import to from "await-to-js";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import api from "../api";
+import { requestMagicLink, sendToken } from "../api";
 import { Logo } from "../components/logo";
 
 export type ILoginFormInputs = {
@@ -35,12 +34,15 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
   res,
 }) => {
   if (!query.token) return { props: { error: false } };
-
-  const [err, response] = await to(api.sendToken(String(query.token)));
-  if (err) return { props: { error: true } };
-
-  res.setHeader("set-cookie", String(response?.headers["set-cookie"]));
-  return { redirect: { destination: "/" }, props: { error: false } };
+  console.log("Token found!");
+  try {
+    const result = await sendToken(String(query.token));
+    console.log("cookie to pass", result?.setCookie);
+    res.setHeader("set-cookie", result?.setCookie || []);
+    return { redirect: { destination: "/" }, props: { error: false } };
+  } catch (e) {
+    return { redirect: { destination: "/" }, props: { error: true } };
+  }
 };
 
 const Login: NextPage<LoginProps> = ({ error }) => {
@@ -54,8 +56,8 @@ const Login: NextPage<LoginProps> = ({ error }) => {
   } = useForm<ILoginFormInputs>();
 
   const requestMagicLinkMutation = useMutation(
-    (payload: { destination: string }) => {
-      return api.requestMagicLink(payload.destination);
+    ({ destination }: { destination: string }) => {
+      return requestMagicLink(destination);
     }
   );
 

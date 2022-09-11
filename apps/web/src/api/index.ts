@@ -1,36 +1,14 @@
+import {
+  AddItemResponse,
+  CreateBoxResponse,
+  CreateDropResponse,
+  FetchBoxResponse,
+  FetchDropResponse,
+  FetchUserResponse,
+} from "@retrobox/types";
+import to from "await-to-js";
 import axios from "axios";
-
-import { default as addItem } from "./add-item.api";
-import { default as createBox } from "./create-box.api";
-import { default as createDrop } from "./create-drop.api";
-import { default as getBox } from "./get-box.api";
-import { default as getDrop } from "./get-drop.api";
-import { default as getMe } from "./get-me.api";
-import { default as requestMagicLink } from "./request-magic-link.api";
-import { default as sendToken } from "./send-token.api";
-
-export type ResponseData<Body, Meta = {}> = {
-  data: Body;
-  meta: Meta;
-};
-
-export type CreateBoxResponseData = ResponseData<{ id: string }>;
-export type CreateDropResponseData = ResponseData<{ id: string }>;
-
-export type FetchBoxResponseData = ResponseData<{
-  id: string;
-  name: string;
-  itemCount: number;
-  latestDrop: { id: string; itemCount: number; createdAt: Date };
-  allDrops: { id: string; itemCount: number; createdAt: Date }[];
-}>;
-
-export type FetchDropResponseData = ResponseData<{
-  id: string;
-  createdAt: Date;
-  items: { message: string; author: string | null }[];
-}>;
-export type AddItemResponseData = ResponseData<{ id: string }>;
+import { IncomingHttpHeaders } from "http";
 
 export const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -38,15 +16,106 @@ export const client = axios.create({
   withCredentials: true,
 });
 
-const api = {
-  createBox,
-  getBox,
-  getDrop,
-  addItem,
-  createDrop,
-  sendToken,
-  getMe,
-  requestMagicLink
+export const fetchBox = async (
+  id: string,
+  headers?: IncomingHttpHeaders
+): Promise<FetchBoxResponse> => {
+  const [err, res] = await to(
+    client.get<FetchBoxResponse>(`/boxes/${id}`, {
+      ...(headers && { headers: { cookie: String(headers.cookie) } }),
+    })
+  );
+  if (err) throw err;
+  return res.data;
 };
 
-export default api;
+export const getDrop = async (
+  id: string,
+  headers?: IncomingHttpHeaders
+): Promise<FetchDropResponse> => {
+  const [err, res] = await to(
+    client.get<FetchDropResponse>(`/drops/${id}`, {
+      ...(headers && { headers: { cookie: String(headers.cookie) } }),
+    })
+  );
+  if (err) throw err;
+  return res.data;
+};
+
+export const addItem = async (
+  { id, message, author }: { id: string; message: string; author?: string },
+  headers?: IncomingHttpHeaders
+): Promise<AddItemResponse> => {
+  const [err, res] = await to(
+    client.post<AddItemResponse>(
+      `/boxes/${id}/add-item`,
+      { message, author },
+      {
+        ...(headers && { headers: { cookie: String(headers.cookie) } }),
+      }
+    )
+  );
+  if (err) throw err;
+  return res.data;
+};
+
+export const createBox = async (
+  name: string
+  // headers?: IncomingHttpHeaders
+): Promise<CreateBoxResponse> => {
+  const [err, res] = await to(
+    client.post<CreateBoxResponse>(
+      `/boxes`,
+      { name }
+      // {
+      //   ...(headers && { headers: { cookie: String(headers.cookie) } }),
+      // }
+    )
+  );
+  if (err) throw err;
+  return res.data;
+};
+
+export const createDrop = async (
+  id: string,
+  headers?: IncomingHttpHeaders
+): Promise<CreateDropResponse> => {
+  const [err, res] = await to(
+    client.post<CreateDropResponse>(
+      `/boxes/${id}/create-drop`,
+      {},
+      {
+        ...(headers && { headers: { cookie: String(headers.cookie) } }),
+      }
+    )
+  );
+  if (err) throw err;
+  return res.data;
+};
+
+export const fetchMe = async (
+  headers?: IncomingHttpHeaders
+): Promise<FetchUserResponse> => {
+  const [err, res] = await to(
+    client.get<FetchUserResponse>(`/me`, {
+      ...(headers && { headers: { cookie: String(headers.cookie) } }),
+    })
+  );
+  if (err) throw err;
+  return res.data;
+};
+
+export const requestMagicLink = async (destination: string) => {
+  const [err, res] = await to(client.post(`/auth/login`, { destination }));
+  if (err) return null;
+  return res.data;
+};
+
+export const sendToken = async (token: string): Promise<any> => {
+  const [err, res] = await to(
+    client.get(`/auth/login/callback`, { params: { token } })
+  );
+  if (err) throw err;
+  const setCookie = res?.headers["set-cookie"] || [];
+  return { setCookie };
+};

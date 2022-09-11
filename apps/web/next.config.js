@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const withTM = require("next-transpile-modules")(["@retrobox/ui", "@retrobox/theme"]);
+const withTM = require("next-transpile-modules")(["@retrobox/theme"]);
 const path = require("path");
 
 const nextConfig = withTM({
@@ -10,9 +10,9 @@ const nextConfig = withTM({
     outputFileTracingRoot: path.join(__dirname, "../../"),
   },
   i18n: {
-    locales: ['en-AU'],
-    defaultLocale: 'en-AU'
-  }
+    locales: ["en-AU"],
+    defaultLocale: "en-AU",
+  },
 });
 
 module.exports = nextConfig;

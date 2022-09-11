@@ -1,25 +1,32 @@
-import { IItemRepository } from "../lib/types";
 import { prisma } from "@retrobox/database";
+import { Item } from "@retrobox/types";
 import to from "await-to-js";
 
-export const createItemRepository = (): IItemRepository => ({
-  create: async (id, message, author) => {
-    const [err, drop] = await to(
-      prisma.item.create({
-        data: { box: { connect: { id } }, message, author },
-        select: { id: true },
-      })
-    );
+import { NotFoundError } from "../lib/errors";
+import { Result } from "../lib/types";
 
-    if (err) return [err];
+const create = async (
+  id: string,
+  message: string,
+  author?: string
+): Result<Item> => {
+  const [err, item] = await to(
+    prisma.item.create({
+      data: { box: { connect: { id } }, message, author },
+    })
+  );
+  if (err) return [err];
+  return [null, { message: item.message, author: item.author || undefined }];
+};
 
-    return [null, drop.id];
-  },
-  delete: async (id) => {
-    const [err] = await to(prisma.item.delete({ where: { id } }));
+const remove = async (id: string): Result<Item> => {
+  const [err, item] = await to(prisma.item.delete({ where: { id } }));
+  if (err) return [err];
+  if (!item) return [new NotFoundError(`Could not find item for id ${id}`)];
+  return [null, { message: item.message, author: item.author || undefined }];
+};
 
-    if (err) return [err];
-
-    return [null, true];
-  },
-});
+export default {
+  create,
+  remove,
+};
