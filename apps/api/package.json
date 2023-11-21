@@ -42,7 +42,7 @@
     "@types/express-session": "1.17.5",
     "@types/jsonwebtoken": "8.5.9",
     "@types/node": "18.0.6",
-    "@types/passport": "1.0.10",
+    "@types/passport": "1.0.16",
     "@types/redis": "4.0.11",
     "@types/winston": "^2.4.4",
     "eslint": "8.23.0",
