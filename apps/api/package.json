@@ -45,7 +45,7 @@
     "@types/passport": "1.0.10",
     "@types/redis": "4.0.11",
     "@types/winston": "^2.4.4",
-    "eslint": "8.23.0",
+    "eslint": "8.57.0",
     "eslint-config-custom-server": "*",
     "nodemon": "2.0.19",
     "ts-node": "10.9.1",
