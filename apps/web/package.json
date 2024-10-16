@@ -12,9 +12,9 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@chakra-ui/icons": "2.0.9",
-    "@chakra-ui/react": "2.3.2",
-    "@chakra-ui/theme-tools": "2.0.11",
+    "@chakra-ui/icons": "2.2.4",
+    "@chakra-ui/react": "2.10.3",
+    "@chakra-ui/theme-tools": "2.2.6",
     "@emotion/react": "11.10.4",
     "@emotion/styled": "11.10.4",
     "@retrobox/theme": "*",
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.19.0",
-    "@chakra-ui/storybook-addon": "4.0.10",
+    "@chakra-ui/storybook-addon": "4.0.17",
     "@storybook/addon-actions": "6.5.10",
     "@storybook/addon-essentials": "6.5.10",
     "@storybook/addon-interactions": "6.5.10",
